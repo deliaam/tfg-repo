@@ -31,10 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -108,6 +105,11 @@ public class SolutionController {
             solutionResponse.setNumberOfCorrections(0);
             solutionResponse.setUserName(student.getName() +" "+ student.getLastName());
             solutionResponse.setUserId(student.getId());
+            List<List<String>> files =new ArrayList<>();
+            for(FileDB file: solution.getFiles()){
+                files.add(Arrays.asList(file.getId(),file.getName()));
+            }
+            solutionResponse.setFiles(files);
             response.add(solutionResponse);
         }
 

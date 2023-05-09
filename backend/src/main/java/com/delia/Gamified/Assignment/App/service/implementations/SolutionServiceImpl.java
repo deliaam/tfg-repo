@@ -1,5 +1,6 @@
 package com.delia.Gamified.Assignment.App.service.implementations;
 
+import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
 import com.delia.Gamified.Assignment.App.model.Task;
 import com.delia.Gamified.Assignment.App.repository.SolutionRepository;
@@ -33,5 +34,21 @@ public class SolutionServiceImpl implements SolutionService {
         } else {
             throw new ChangeSetPersister.NotFoundException();
         }
+    }
+
+    public void updateNewQualification(Solution solution, EQualification newQualification){
+        if(solution.getQualification()==null){
+            solution.setQualification(newQualification);
+        }
+        EQualification currentQualification = solution.getQualification();
+        switch (currentQualification){
+            case POOR -> {}
+            case FAIR -> {
+                if(newQualification.equals(EQualification.GOOD)) return;
+                solution.setQualification(newQualification);
+            }
+            case GOOD -> solution.setQualification(newQualification);
+        }
+        solutionRepository.save(solution);
     }
 }

@@ -38,7 +38,13 @@ public class Solution {
 
     @OneToMany(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
+    private Set<Correction> corrections = new HashSet<>();
+
+    @OneToMany(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<FileDB> files = new HashSet<>();
+
+    private EQualification qualification;
 
     private String filesIds = "";
 
@@ -113,6 +119,22 @@ public class Solution {
         }
 
         return ids;
+    }
+
+    public Set<Correction> getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(Set<Correction> corrections) {
+        this.corrections = corrections;
+    }
+
+    public EQualification getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(EQualification qualification) {
+        this.qualification = qualification;
     }
 
     public void setFilesIds(String filesIds) {

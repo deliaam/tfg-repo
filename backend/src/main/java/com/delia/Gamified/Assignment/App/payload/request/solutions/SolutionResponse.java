@@ -2,6 +2,9 @@ package com.delia.Gamified.Assignment.App.payload.request.solutions;
 
 import com.delia.Gamified.Assignment.App.model.Solution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SolutionResponse {
 
     private Solution solution;
@@ -10,6 +13,8 @@ public class SolutionResponse {
     private String calification;
 
     private String userName;
+
+    private List<List<String>> files =new ArrayList<>();
 
     private Long userId;
     public SolutionResponse(){
@@ -54,5 +59,13 @@ public class SolutionResponse {
 
     public void setCalification(String calification) {
         this.calification = calification;
+    }
+
+    public List<List<String>>  getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<List<String>>  files) {
+        this.files = files;
     }
 }

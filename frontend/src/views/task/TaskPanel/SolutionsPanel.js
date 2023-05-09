@@ -284,7 +284,12 @@ const SolutionsPanel = (props) => {
                                                         margin: 2
                                                     }}
                                                 >
-                                                    <CardActionArea sx={{ p: 2 }} onClick={() => {}}>
+                                                    <CardActionArea
+                                                        sx={{ p: 2 }}
+                                                        onClick={() => {
+                                                            onSolutionClick(solutionObj);
+                                                        }}
+                                                    >
                                                         <Grid container spacing={3} direction="row" alignItems="center">
                                                             <Grid item>
                                                                 <Grid

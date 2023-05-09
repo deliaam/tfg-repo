@@ -63,7 +63,7 @@ const SolutionPanel = (props) => {
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     const userId = useSelector((state) => state.auth.user.id);
 
-    const getCorrections = async () => {
+    /*     const getCorrections = async () => {
         try {
             const response = await correctionService.getCorrections(solutionObj.solution.id);
             console.log(response);
@@ -85,13 +85,13 @@ const SolutionPanel = (props) => {
     }
     useEffect(() => {
         findAndRemoveMyCorrection();
-    }, [corrections]);
+    }, [corrections]); */
     const userHasHandled = myCorrection != null;
 
-    useEffect(() => {
+    /*     useEffect(() => {
         getCorrections();
     }, [handled]);
-
+ */
     async function downloadFile(id) {
         const response = await fileService.getFile(id);
         const blob = new Blob([response.data], { type: 'application/octet-stream' });

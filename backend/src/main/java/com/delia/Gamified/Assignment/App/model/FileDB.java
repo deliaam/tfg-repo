@@ -35,6 +35,12 @@ public class FileDB {
     @JsonIgnore
     private Solution solution;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "correction_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Correction correction;
+
     public FileDB() {
     }
 
@@ -90,5 +96,13 @@ public class FileDB {
 
     public void setSolution(Solution solution) {
         this.solution = solution;
+    }
+
+    public Correction getCorrection() {
+        return correction;
+    }
+
+    public void setCorrection(Correction correction) {
+        this.correction = correction;
     }
 }

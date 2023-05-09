@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/task/**").permitAll()
                 .requestMatchers("/solution/**").permitAll()
                 .requestMatchers("/handleResignation/**").permitAll()
+                .requestMatchers("/correction/**").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

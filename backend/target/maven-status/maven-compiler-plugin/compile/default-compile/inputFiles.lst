@@ -1,4 +1,5 @@
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\classes\AddRequest.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\EQualification.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\interfaces\HandleResignationService.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\ERole.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Lesson.java
@@ -7,13 +8,17 @@ C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Ass
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\AuthController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\HandleResignation.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\classes\DeleteRequest.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\corrections\CreateCorrectionRequest.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\interfaces\CorrectionService.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\ClassRepository.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\CorrectionServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\LessonController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\FileDBRepository.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Teacher.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\classes\JoinRequest.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\GamifiedAssignmentAppApplication.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\StudentController.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\CorrectionRepository.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\LoginRequest.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\FileStorageServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\UserRepository.java
@@ -29,6 +34,7 @@ C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Ass
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\solutions\CreateSolutionRequest.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\handleResignations\HandleResignationRequest.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Student.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\corrections\CorrectionResponse.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\jwt\AuthEntryPointJwt.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\RoleRepository.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Solution.java
@@ -44,7 +50,6 @@ C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Ass
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\TaskController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\TeacherController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\WebSecurityConfig.java
-C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\TestController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\HandleResignationServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\User.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\jwt\AuthTokenFilter.java
@@ -52,10 +57,13 @@ C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Ass
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\ClassServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Task.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\solutions\SolutionResponse.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\UserServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\interfaces\ClassService.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\fileupload\ResponseFile.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\payload\request\tasks\CreateTaskRequest.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\Correction.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\StudentServiceImpl.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\CorrectionController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\SolutionRepository.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\repository\LessonRepository.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\SolutionController.java

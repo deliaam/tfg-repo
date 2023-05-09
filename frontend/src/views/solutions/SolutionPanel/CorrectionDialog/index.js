@@ -29,37 +29,29 @@ import MainCard from 'ui-components/MainCard';
 import { LessonContext } from 'contexts/lesson/LessonContext';
 import './rte-editor.css';
 import FileComponent from 'ui-components/FileComponent';
-import solutionService from 'services/solution.service';
+import correctionService from 'services/correction.service';
 
-// date time picker
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import dayjs from 'dayjs';
-import es from 'dayjs/locale/es';
-import { esES } from '@mui/x-date-pickers/locales';
 import { useSelector } from 'react-redux';
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) => {
-    const [title, setTitle] = useState('');
+const CorrectionDialog = ({ openCorrection, setOpenCorrection, solutionId, setHandled }) => {
     const [description, setDescription] = useState('Descripción');
-    dayjs.locale('es');
-    const [date, setDate] = useState(dayjs('2022-05-04T15:30'));
-    console.log(date);
     const [files, setFiles] = useState([]);
+    const [qualification, setQualification] = useState();
     const auxFiles = [...files];
-    const [lesson, setLesson] = useState(0);
-
+    console.log(qualification);
     const userId = useSelector((state) => state.auth.user.id);
+    const qualifications = [
+        { value: 'GOOD', label: 'Bien' },
+        { value: 'FAIR', label: 'Regular' },
+        { value: 'POOR', label: 'Mal' }
+    ];
 
     const create = () => {
         console.log(files);
-        solutionService.createSolution(userId, taskId, description, files).then((response) => {
+        correctionService.createCorrection(userId, solutionId, description, qualification, files).then((response) => {
             setHandled(true);
         });
     };
@@ -81,15 +73,18 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
     useEffect(() => {
         console.log(`files : ${files}`);
     }, [files]);
-    const handleCreateTask = () => {
+    const handleCreateCorrection = () => {
         create();
-        setOpenSolution(false);
+        setOpenCorrection(false);
+    };
+    const handleQualificationChange = (event) => {
+        setQualification(event.target.value);
     };
     return (
         <Dialog
-            open={openSolution}
+            open={openCorrection}
             onClose={() => {
-                setOpenSolution(false);
+                setOpenCorrection(false);
             }}
             fullScreen
             TransitionComponent={Transition}
@@ -100,17 +95,17 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
                         edge="start"
                         color="inherit"
                         onClick={() => {
-                            setOpenSolution(false);
+                            setOpenCorrection(false);
                         }}
                         aria-label="close"
                     >
                         <CloseIcon />
                     </IconButton>
                     <Typography sx={{ ml: 2, flex: 1 }} variant="h3" component="div" color="white">
-                        Solución
+                        Corrección
                     </Typography>
-                    <Button color="inherit" onClick={handleCreateTask} size="large">
-                        Entregar solución
+                    <Button color="inherit" onClick={handleCreateCorrection} size="large">
+                        Entregar corrección
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -137,12 +132,29 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
                                 );
                             })}
                         </MainCard>
-
-                        {/*<div>{parse(description)}</div>*/}
+                    </Grid>
+                    <Grid item sx={{ flexGrow: 1, maxWidth: 500 }}>
+                        <MainCard>
+                            <Typography variant="h5">Calificación</Typography>
+                            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                                <Select
+                                    value={qualification}
+                                    onChange={handleQualificationChange}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                >
+                                    {qualifications.map((qualification, index) => (
+                                        <MenuItem value={qualification.value} key={index}>
+                                            {qualification.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </MainCard>
                     </Grid>
                 </Grid>
             </DialogContent>
         </Dialog>
     );
 };
-export default SolutionDialog;
+export default CorrectionDialog;
