@@ -38,7 +38,7 @@ import { esES } from '@mui/x-date-pickers';
 import { connect, useSelector } from 'react-redux';
 import BreadcrumbsComponent from 'ui-components/BreadcrumbsComponent';
 import { ClassContext } from 'contexts/class/ClassContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const TasksPanel = (props) => {
     const [order, setOrder] = useState('recents');
@@ -51,8 +51,9 @@ const TasksPanel = (props) => {
     const [tasks, setTasks] = useState(undefined);
 
     const { pending, handled, closed } = state;
-    const { classObj } = useContext(ClassContext) || { classObj: undefined };
-
+    const {
+        state: { classObj }
+    } = useLocation();
     const { lessonsList, setLessonsList } = useContext(LessonContext);
     const navigate = useNavigate();
     const userId = useSelector((state) => state.auth.user.id);
@@ -83,7 +84,7 @@ const TasksPanel = (props) => {
         setLesson(event.target.value);
     };
     const onTaskClick = (taskObj) => {
-        navigate(`/home/classes/class/task`, { state: { taskObj: taskObj } });
+        navigate(`/home/classes/class/task`, { state: { taskObj: taskObj, classObj: classObj } });
     };
 
     useEffect(() => {

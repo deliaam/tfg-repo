@@ -68,6 +68,7 @@ const Header = (props) => {
     const {
         state: { classObj }
     } = useLocation();
+    console.log(`classObj Header : ${JSON.stringify(classObj)}`);
     const classId = classObj.id;
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
 

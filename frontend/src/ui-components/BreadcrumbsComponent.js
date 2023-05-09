@@ -15,21 +15,32 @@ const BreadcrumbsComponent = () => {
     const pathnames = location.pathname.split('/').filter((x) => x);
     console.log('context');
 
-    const { classObj } = useContext(ClassContext) || { classObj: { name: 'Clase' } };
-    function getName(pathname) {
+    // const { classObj } = useContext(ClassContext) || { classObj: { name: 'Clase' } };
+
+    const { state } = useLocation();
+    console.log(`breadcrumbs state : ${JSON.stringify(state)}`);
+    function getLink(pathname) {
         switch (pathname) {
             case 'classes':
-                return 'Clases';
+                return { name: 'Clases', obj: {} };
             case 'class':
-                return classObj.name;
+                return { name: state.classObj.name, obj: { classObj: state.classObj } };
             case 'task':
-                return 'Tarea';
+                return { name: state.taskObj.task.title, obj: { taskObj: state.taskObj, classObj: state.classObj } };
+            case 'solution':
+                return { name: state.solutionObj.userName, obj: { solutionObj: state.solutionObj } };
             default:
                 return null;
         }
     }
-    function LinkRouter(props) {
-        return <Link {...props} component={RouterLink} />;
+    function LinkRouter({ to, state, ...rest }) {
+        const navigate = useNavigate();
+
+        const handleClick = (event) => {
+            event.preventDefault();
+            navigate(to, { state });
+        };
+        return <Link {...rest} component={RouterLink} onClick={handleClick} />;
     }
     return (
         <MainCard>
@@ -41,16 +52,18 @@ const BreadcrumbsComponent = () => {
                 {pathnames.map((value, index) => {
                     const last = index >= pathnames.length - 1;
                     const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-                    const name = getName(value);
-                    if (name === null) return;
+                    const link = getLink(value);
+                    if (link === null) return;
+                    const obj = link.obj;
+                    console.log(`link.obj : ${JSON.stringify(obj)}`);
                     return last ? (
                         <Typography color="text.primary" key={to}>
-                            {name}
+                            {link.name}
                         </Typography>
                     ) : (
                         index != 0 && (
-                            <LinkRouter underline="hover" color="inherit" to={to} key={to}>
-                                {name}
+                            <LinkRouter underline="hover" color="inherit" to={to} key={to} state={obj}>
+                                {link.name}
                             </LinkRouter>
                         )
                     );

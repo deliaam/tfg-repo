@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 
 // ==============================|| TYPOGRAPHY ||============================== //
 
-const ClassPanel = () => {
+const TaskPanel = () => {
     return (
         <>
             <TabPanel value="1">
@@ -18,4 +18,4 @@ const ClassPanel = () => {
     );
 };
 
-export default ClassPanel;
+export default TaskPanel;

@@ -31,7 +31,6 @@ import lessonService from 'services/lesson.service';
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import { LessonContext } from 'contexts/lesson/LessonContext';
-import solutionService from 'services/solution.service';
 import dayjs from 'dayjs';
 import es from 'dayjs/locale/es';
 import { esES } from '@mui/x-date-pickers';
@@ -44,62 +43,53 @@ import DownloadIcon from '@mui/icons-material/Download';
 import parse from 'html-react-parser';
 
 // project imports
-import SolutionDialog from './SolutionDialog';
+import CorrectionDialog from './CorrectionDialog';
 import fileService from 'services/file.service';
 import AlertDialog from 'ui-components/AlertDialog';
 import handleResignationService from 'services/handleResignation.service';
+import correctionService from 'services/correction.service';
 
-const SolutionsPanel = (props) => {
-    const [openSolution, setOpenSolution] = useState(false);
-    const [solutions, setSolutions] = useState([]);
-    const [mySolution, setMySolution] = useState(null);
+const SolutionPanel = (props) => {
+    const [openCorrection, setOpenCorrection] = useState(false);
+    const [corrections, setCorrections] = useState([]);
+    const [myCorrection, setMyCorrection] = useState(null);
     const [handled, setHandled] = useState(false);
-    const [openResign, setOpenResign] = useState(false);
     const navigate = useNavigate();
     const {
-        state: { taskObj }
+        state: { solutionObj }
     } = useLocation();
-    const [userHasResigned, setUserHasResigned] = useState(taskObj.resigned);
 
     const theme = useTheme();
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     const userId = useSelector((state) => state.auth.user.id);
 
-    const getSolutions = async () => {
+    const getCorrections = async () => {
         try {
-            const response = await solutionService.getSolutions(taskObj.task.id);
+            const response = await correctionService.getCorrections(solutionObj.solution.id);
             console.log(response);
-            setSolutions(response);
+            setCorrections(response);
         } catch (error) {
             console.log(error);
             return {};
         }
     };
-    function findAndRemoveMySolution() {
-        console.log('findAndRemoveMySolution');
-        for (let i = 0; i < solutions.length; i++) {
-            if (solutions[i].userId === userId) {
+    function findAndRemoveMyCorrection() {
+        for (let i = 0; i < corrections.length; i++) {
+            if (corrections[i].userId === userId) {
                 console.log('remove');
-                const removed = solutions.splice(i, 1)[0];
-                setSolutions(solutions);
-                setMySolution(removed);
+                const removed = corrections.splice(i, 1)[0];
+                setCorrections(corrections);
+                setMyCorrection(removed);
             }
         }
     }
     useEffect(() => {
-        findAndRemoveMySolution();
-    }, [solutions]);
-    console.log(JSON.stringify(mySolution));
-    const userHasHandled = mySolution != null;
+        findAndRemoveMyCorrection();
+    }, [corrections]);
+    const userHasHandled = myCorrection != null;
 
-    const onSolutionClick = (solutionObj) => {
-        navigate(`/home/classes/class/task/solution`, { state: { solutionObj: solutionObj } });
-    };
-    taskObj.files.map((file) => {
-        console.log(file[0]);
-    });
     useEffect(() => {
-        getSolutions();
+        getCorrections();
     }, [handled]);
 
     async function downloadFile(id) {
@@ -113,17 +103,6 @@ const SolutionsPanel = (props) => {
         link.click();
     }
 
-    const handleResign = async () => {
-        try {
-            const response = await handleResignationService.create(userId, taskObj.task.id);
-            setUserHasResigned(true);
-        } catch (error) {
-            console.log(error);
-            return {};
-        }
-        setOpenResign(false);
-    };
-
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -132,78 +111,57 @@ const SolutionsPanel = (props) => {
                 </Grid>
                 <Grid item xs>
                     <MainCard>
-                        <Typography variant="h4">{taskObj.task.title}</Typography>
+                        <Typography variant="h4">{solutionObj.userName}</Typography>
                         <Typography variant="caption">
-                            Fecha de entrega: {dayjs(taskObj.task.dateTime).format('ddd, DD MMM YYYY HH:mm:ss')}
+                            Fecha de entrega: {dayjs(solutionObj.solution.dateTime).format('ddd, DD MMM YYYY HH:mm:ss')}
                         </Typography>
-                        <Box sx={{ p: 0 }}></Box>
-                        <Typography variant="caption">Tema: {taskObj.lesson}</Typography>
-                        <Box sx={{ p: 1 }}></Box>
-                        <Typography variant="body1">{<div>{parse(taskObj.task.description)}</div>}</Typography>
+                        <Typography variant="body1">{<div>{parse(solutionObj.solution.description)}</div>}</Typography>
                         <Box sx={{ p: 2 }}></Box>
 
-                        {taskObj.files.map((file) => {
-                            return (
-                                <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                    <Typography>{file[1]}</Typography>
-                                    <IconButton>
-                                        <DownloadIcon
-                                            onClick={() => {
-                                                downloadFile(file[0]);
-                                            }}
-                                        ></DownloadIcon>
-                                    </IconButton>
-                                </Box>
-                            );
-                        })}
+                        {solutionObj.files &&
+                            solutionObj.files.map((file) => {
+                                return (
+                                    <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                        <Typography>{file[1]}</Typography>
+                                        <IconButton>
+                                            <DownloadIcon
+                                                onClick={() => {
+                                                    downloadFile(file[0]);
+                                                }}
+                                            ></DownloadIcon>
+                                        </IconButton>
+                                    </Box>
+                                );
+                            })}
                         <Box sx={{ p: 1 }}></Box>
                         <Box sx={{ display: 'flex', alignItems: 'right' }}>
                             <Box sx={{ flexGrow: 1 }} />
-                            <Button
-                                onClick={() => {
-                                    setOpenResign(true);
-                                }}
-                                variant="contained"
-                                size="small"
-                                disabled={userHasHandled || userHasResigned || isTeacher}
-                            >
-                                Ver soluciones
-                            </Button>
-                            <AlertDialog
-                                open={openResign}
-                                setOpen={setOpenResign}
-                                title="Estás seguro de que quieres ver las soluciones?"
-                                body="Si aceptas estarás renunciando a la posibilidad de entregar una solución a esta tarea."
-                                disagree={true}
-                                agree={true}
-                                handle={handleResign}
-                            ></AlertDialog>
                             <Box sx={{ p: 1 }}></Box>
                             <Button
                                 onClick={() => {
-                                    setOpenSolution(true);
+                                    setOpenCorrection(true);
                                 }}
                                 variant="contained"
                                 size="small"
-                                disabled={userHasHandled || userHasResigned || isTeacher}
+                                disabled={userHasHandled || isTeacher}
                             >
-                                Entregar solución
+                                Corregir
                             </Button>
-                            <SolutionDialog
-                                openSolution={openSolution}
-                                setOpenSolution={setOpenSolution}
-                                taskId={taskObj.task.id}
+                            <CorrectionDialog
+                                openCorrection={openCorrection}
+                                setOpenCorrection={setOpenCorrection}
+                                solutionId={solutionObj.solution.id}
                                 setHandled={setHandled}
                             />
                         </Box>
                     </MainCard>
                 </Grid>
-                <Grid item xs>
+                {/*                 <Grid item xs>
                     <Grid container direction="row" spacing={3}>
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {mySolution && (
+                                    {myCorrection && (
                                         <Box key={-1} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                             <Card
                                                 sx={{
@@ -217,7 +175,12 @@ const SolutionsPanel = (props) => {
                                                     margin: 2
                                                 }}
                                             >
-                                                <CardActionArea sx={{ p: 2 }} onClick={() => {}}>
+                                                <CardActionArea
+                                                    sx={{ p: 2 }}
+                                                    onClick={() => {
+                                                        onSolutionClick(mySolution);
+                                                    }}
+                                                >
                                                     <Grid container spacing={3} direction="row" alignItems="center">
                                                         <Grid item>
                                                             <Grid
@@ -243,7 +206,7 @@ const SolutionsPanel = (props) => {
                                                         <Box sx={{ flexGrow: 1 }} />
                                                         <Grid item sx={{ marginTop: 1 }}>
                                                             <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                <Grid item>{/*mySolution.calification!=null && <Icon>*/}</Grid>
+                                                                <Grid item>{/*mySolution.calification!=null && <Icon>*}{/*</Grid>
                                                             </Grid>
                                                         </Grid>
                                                         <Grid item sx={{ marginTop: 1 }}>
@@ -280,7 +243,12 @@ const SolutionsPanel = (props) => {
                                                         margin: 2
                                                     }}
                                                 >
-                                                    <CardActionArea sx={{ p: 2 }} onClick={() => {}}>
+                                                    <CardActionArea
+                                                        sx={{ p: 2 }}
+                                                        onClick={() => {
+                                                            onSolutionClick(solutionObj);
+                                                        }}
+                                                    >
                                                         <Grid container spacing={3} direction="row" alignItems="center">
                                                             <Grid item>
                                                                 <Grid
@@ -306,7 +274,7 @@ const SolutionsPanel = (props) => {
                                                             <Box sx={{ flexGrow: 1 }} />
                                                             <Grid item sx={{ marginTop: 1 }}>
                                                                 <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                    <Grid item>{/*solutionObj.calification!=null && <Icon>*/}</Grid>
+                                                                    <Grid item>{/*solutionObj.calification!=null && <Icon>*}</Grid>
                                                                 </Grid>
                                                             </Grid>
                                                             <Grid item sx={{ marginTop: 1 }}>
@@ -333,7 +301,7 @@ const SolutionsPanel = (props) => {
                             </Card>
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </>
     );
@@ -346,4 +314,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(SolutionsPanel);
+export default connect(mapStateToProps)(SolutionPanel);
