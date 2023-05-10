@@ -35,6 +35,7 @@ public class TaskServiceImpl implements TaskService {
         return task.getDateTime().isAfter(LocalDateTime.now());
     }
 
+    @Override
     public Optional<Solution> hasUserAnswered(Long userId, Task task){
         for(Solution solution : task.getSolutions()){
             if(solution.getStudent().getId()==userId) return Optional.of(solution);
@@ -46,5 +47,15 @@ public class TaskServiceImpl implements TaskService {
             if(handleResignation.getTask().equals(task)) return true;
         }
         return false;
+    }
+
+    public int userCorrectionsInTask(Long userId, Task task){
+        int count=0;
+        for(Solution solution : task.getSolutions()){
+            for (Correction correction : solution.getCorrections()){
+                if(correction.getUser().getId() == userId) count++;
+            }
+        }
+        return count;
     }
 }

@@ -15,5 +15,5 @@ public interface TaskService {
     public Task findById(Integer taskId) throws ChangeSetPersister.NotFoundException;
     public Optional<Solution> hasUserAnswered(Long userId, Task task);
     public boolean hasUserResigned(Task task, Student student);
-
+    public int userCorrectionsInTask(Long userId, Task task);
 }

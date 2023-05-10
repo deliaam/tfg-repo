@@ -33,4 +33,16 @@ public class Teacher extends User{
     public void addClass(Class classObj) {
         this.classes.add(classObj);
     }
+
+    public void setClasses(Set<Class> classes) {
+        this.classes = classes;
+    }
+
+    public Set<String> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<String> notifications) {
+        this.notifications = notifications;
+    }
 }

@@ -3,7 +3,7 @@ import { useState } from 'react';
 // filtering imports
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import {
     Card,
     CardContent,
@@ -20,7 +20,8 @@ import {
     Select,
     Checkbox,
     FormGroup,
-    FormControlLabel
+    FormControlLabel,
+    Collapse
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -48,29 +49,45 @@ import fileService from 'services/file.service';
 import AlertDialog from 'ui-components/AlertDialog';
 import handleResignationService from 'services/handleResignation.service';
 import correctionService from 'services/correction.service';
+import { getIcon } from 'utils/utils';
+import CorrectionCard from './CorrectionCard';
+
+const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest
+    })
+}));
 
 const SolutionPanel = (props) => {
     const [openCorrection, setOpenCorrection] = useState(false);
     const [corrections, setCorrections] = useState([]);
     const [myCorrection, setMyCorrection] = useState(null);
     const [handled, setHandled] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+
     const navigate = useNavigate();
     const {
         state: { solutionObj }
     } = useLocation();
 
     const theme = useTheme();
-    const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     const userId = useSelector((state) => state.auth.user.id);
 
-    /*     const getCorrections = async () => {
-        try {
-            const response = await correctionService.getCorrections(solutionObj.solution.id);
-            console.log(response);
-            setCorrections(response);
-        } catch (error) {
-            console.log(error);
-            return {};
+    const getCorrections = async () => {
+        if (solutionObj.userId == userId || solutionObj.corrected || handled) {
+            try {
+                const response = await correctionService.getCorrections(solutionObj.solution.id);
+                console.log(response);
+                setCorrections(response);
+            } catch (error) {
+                console.log(error);
+                return {};
+            }
         }
     };
     function findAndRemoveMyCorrection() {
@@ -85,13 +102,13 @@ const SolutionPanel = (props) => {
     }
     useEffect(() => {
         findAndRemoveMyCorrection();
-    }, [corrections]); */
+    }, [corrections]);
     const userHasHandled = myCorrection != null;
 
-    /*     useEffect(() => {
+    useEffect(() => {
         getCorrections();
     }, [handled]);
- */
+
     async function downloadFile(id) {
         const response = await fileService.getFile(id);
         const blob = new Blob([response.data], { type: 'application/octet-stream' });
@@ -102,7 +119,10 @@ const SolutionPanel = (props) => {
         document.body.appendChild(link);
         link.click();
     }
-
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    };
+    console.log(`handled : ${handled}`);
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -111,10 +131,16 @@ const SolutionPanel = (props) => {
                 </Grid>
                 <Grid item xs>
                     <MainCard>
-                        <Typography variant="h4">{solutionObj.userName}</Typography>
-                        <Typography variant="caption">
-                            Fecha de entrega: {dayjs(solutionObj.solution.dateTime).format('ddd, DD MMM YYYY HH:mm:ss')}
-                        </Typography>
+                        <Grid container direction="row">
+                            <Grid item>
+                                <Typography variant="h4">{solutionObj.userName}</Typography>
+                                <Typography variant="caption">
+                                    Entregado: {dayjs(solutionObj.solution.dateTime).format('ddd, DD MMM YYYY HH:mm:ss')}
+                                </Typography>
+                            </Grid>
+                            <Box sx={{ flexGrow: 1 }} />
+                            <Grid item>{getIcon(solutionObj.solution.qualification)}</Grid>
+                        </Grid>
                         <Typography variant="body1">{<div>{parse(solutionObj.solution.description)}</div>}</Typography>
                         <Box sx={{ p: 2 }}></Box>
 
@@ -143,7 +169,7 @@ const SolutionPanel = (props) => {
                                 }}
                                 variant="contained"
                                 size="small"
-                                disabled={userHasHandled || isTeacher}
+                                disabled={solutionObj.corrected || solutionObj.userId == userId || handled}
                             >
                                 Corregir
                             </Button>
@@ -156,80 +182,15 @@ const SolutionPanel = (props) => {
                         </Box>
                     </MainCard>
                 </Grid>
-                {/*                 <Grid item xs>
+                <Grid item xs>
                     <Grid container direction="row" spacing={3}>
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {myCorrection && (
-                                        <Box key={-1} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
-                                            <Card
-                                                sx={{
-                                                    border: '1px solid',
-                                                    borderColor: theme.palette.secondary.light,
-                                                    ':hover': {
-                                                        boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
-                                                    },
-                                                    backgroundColor: theme.palette.secondary.light,
-                                                    width: '100%',
-                                                    margin: 2
-                                                }}
-                                            >
-                                                <CardActionArea
-                                                    sx={{ p: 2 }}
-                                                    onClick={() => {
-                                                        onSolutionClick(mySolution);
-                                                    }}
-                                                >
-                                                    <Grid container spacing={3} direction="row" alignItems="center">
-                                                        <Grid item>
-                                                            <Grid
-                                                                container
-                                                                direction="column"
-                                                                alignItems="left"
-                                                                justifyContent="space-between"
-                                                                spacing={1}
-                                                            >
-                                                                <Grid item>
-                                                                    <Typography variant="h3">Tu solución</Typography>
-                                                                </Grid>
-                                                                <Grid item>
-                                                                    <Typography variant="body1">
-                                                                        Entregado:{' '}
-                                                                        {dayjs(mySolution.solution.dateTime).format(
-                                                                            'ddd, DD MMM YYYY HH:mm:ss'
-                                                                        )}
-                                                                    </Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Box sx={{ flexGrow: 1 }} />
-                                                        <Grid item sx={{ marginTop: 1 }}>
-                                                            <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                <Grid item>{/*mySolution.calification!=null && <Icon>*}{/*</Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Grid item sx={{ marginTop: 1 }}>
-                                                            <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                <Grid item>
-                                                                    <Typography variant="h1">{mySolution.numberOfCorrections}</Typography>
-                                                                </Grid>
-                                                                <Grid item>
-                                                                    <Typography variant="body1">Correcciones</Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Grid item>
-                                                            <ArrowCircleRightIcon fontSize="large" />
-                                                        </Grid>
-                                                    </Grid>
-                                                </CardActionArea>
-                                            </Card>
-                                        </Box>
-                                    )}
-                                    {solutions &&
-                                        (userHasResigned || userHasHandled || isTeacher) &&
-                                        solutions.map((solutionObj, index) => (
+                                    {myCorrection && <CorrectionCard correctionObj={myCorrection} isOwn={true} />}
+
+                                    {corrections &&
+                                        corrections.map((correctionObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card
                                                     sx={{
@@ -243,13 +204,14 @@ const SolutionPanel = (props) => {
                                                         margin: 2
                                                     }}
                                                 >
-                                                    <CardActionArea
-                                                        sx={{ p: 2 }}
-                                                        onClick={() => {
-                                                            onSolutionClick(solutionObj);
-                                                        }}
-                                                    >
-                                                        <Grid container spacing={3} direction="row" alignItems="center">
+                                                    <CardContent sx={{ p: 2 }}>
+                                                        <Grid
+                                                            container
+                                                            spacing={3}
+                                                            direction="row"
+                                                            alignItems="center"
+                                                            alignContent="center"
+                                                        >
                                                             <Grid item>
                                                                 <Grid
                                                                     container
@@ -257,14 +219,15 @@ const SolutionPanel = (props) => {
                                                                     alignItems="left"
                                                                     justifyContent="space-between"
                                                                     spacing={1}
+                                                                    alignContent="center"
                                                                 >
                                                                     <Grid item>
-                                                                        <Typography variant="h3">{solutionObj.userName}</Typography>
+                                                                        <Typography variant="h3">{correctionObj.userName}</Typography>
                                                                     </Grid>
                                                                     <Grid item>
                                                                         <Typography variant="body1">
                                                                             Entregado:{' '}
-                                                                            {dayjs(solutionObj.solution.dateTime).format(
+                                                                            {dayjs(correctionObj.correction.dateTime).format(
                                                                                 'ddd, DD MMM YYYY HH:mm:ss'
                                                                             )}
                                                                         </Typography>
@@ -274,26 +237,45 @@ const SolutionPanel = (props) => {
                                                             <Box sx={{ flexGrow: 1 }} />
                                                             <Grid item sx={{ marginTop: 1 }}>
                                                                 <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                    <Grid item>{/*solutionObj.calification!=null && <Icon>*}</Grid>
+                                                                    <Grid item>{getIcon(correctionObj.correction.qualification)}</Grid>
                                                                 </Grid>
                                                             </Grid>
-                                                            <Grid item sx={{ marginTop: 1 }}>
-                                                                <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                    <Grid item>
-                                                                        <Typography variant="h1">
-                                                                            {solutionObj.numberOfCorrections}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Typography variant="body1">Correcciones</Typography>
-                                                                    </Grid>
-                                                                </Grid>
-                                                            </Grid>
+
                                                             <Grid item>
-                                                                <ArrowCircleRightIcon fontSize="large" />
+                                                                <ExpandMore
+                                                                    expand={expanded}
+                                                                    onClick={handleExpandClick}
+                                                                    aria-expanded={expanded}
+                                                                    aria-label="show more"
+                                                                >
+                                                                    <ExpandMoreIcon />
+                                                                </ExpandMore>
                                                             </Grid>
                                                         </Grid>
-                                                    </CardActionArea>
+                                                    </CardContent>
+                                                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                                                        <CardContent>
+                                                            <Typography variant="body1">
+                                                                {<div>{parse(correctionObj.correction.description)}</div>}
+                                                            </Typography>
+                                                            <Box sx={{ p: 2 }}></Box>
+
+                                                            {correctionObj.files.map((file) => {
+                                                                return (
+                                                                    <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                                                        <Typography>{file[1]}</Typography>
+                                                                        <IconButton>
+                                                                            <DownloadIcon
+                                                                                onClick={() => {
+                                                                                    downloadFile(file[0]);
+                                                                                }}
+                                                                            ></DownloadIcon>
+                                                                        </IconButton>
+                                                                    </Box>
+                                                                );
+                                                            })}
+                                                        </CardContent>
+                                                    </Collapse>
                                                 </Card>
                                             </Box>
                                         ))}
@@ -301,7 +283,7 @@ const SolutionPanel = (props) => {
                             </Card>
                         </Grid>
                     </Grid>
-                </Grid> */}
+                </Grid>
             </Grid>
         </>
     );

@@ -48,6 +48,7 @@ import SolutionDialog from './SolutionDialog';
 import fileService from 'services/file.service';
 import AlertDialog from 'ui-components/AlertDialog';
 import handleResignationService from 'services/handleResignation.service';
+import { getIcon } from 'utils/utils';
 
 const SolutionsPanel = (props) => {
     const [openSolution, setOpenSolution] = useState(false);
@@ -67,7 +68,7 @@ const SolutionsPanel = (props) => {
 
     const getSolutions = async () => {
         try {
-            const response = await solutionService.getSolutions(taskObj.task.id);
+            const response = await solutionService.getSolutions(taskObj.task.id, userId);
             console.log(response);
             setSolutions(response);
         } catch (error) {
@@ -250,6 +251,17 @@ const SolutionsPanel = (props) => {
                                                                 <Grid item>{/*mySolution.calification!=null && <Icon>*/}</Grid>
                                                             </Grid>
                                                         </Grid>
+                                                        {mySolution.solution.qualification && (
+                                                            <Grid item sx={{ marginTop: 1.3 }}>
+                                                                <Grid container direction="column" alignItems="center" spacing={1}>
+                                                                    <Grid item>{getIcon(mySolution.solution.qualification)}</Grid>
+                                                                    <Grid item>
+                                                                        <Typography variant="body1">Calificación</Typography>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Grid>
+                                                        )}
+
                                                         <Grid item sx={{ marginTop: 1 }}>
                                                             <Grid container direction="column" alignItems="center" spacing={1}>
                                                                 <Grid item>
@@ -313,11 +325,17 @@ const SolutionsPanel = (props) => {
                                                                 </Grid>
                                                             </Grid>
                                                             <Box sx={{ flexGrow: 1 }} />
-                                                            <Grid item sx={{ marginTop: 1 }}>
-                                                                <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                    <Grid item>{/*solutionObj.calification!=null && <Icon>*/}</Grid>
+                                                            {solutionObj.solution.qualification && (
+                                                                <Grid item sx={{ marginTop: 1.1 }}>
+                                                                    <Grid container direction="column" alignItems="center" spacing={1}>
+                                                                        <Grid item>{getIcon(solutionObj.solution.qualification)}</Grid>
+                                                                        <Grid item>
+                                                                            <Typography variant="body1">Calificación</Typography>
+                                                                        </Grid>
+                                                                    </Grid>
                                                                 </Grid>
-                                                            </Grid>
+                                                            )}
+
                                                             <Grid item sx={{ marginTop: 1 }}>
                                                                 <Grid container direction="column" alignItems="center" spacing={1}>
                                                                     <Grid item>

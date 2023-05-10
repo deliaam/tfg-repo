@@ -20,7 +20,7 @@ class CorrectionService {
             }
         });
     }
-    getCorrections(taskId) {
+    getCorrections(solutionId) {
         return axios
             .get(API_URL + 'getCorrections', {
                 headers: { ...authHeader(), 'Content-Type': 'multipart/form-data' },

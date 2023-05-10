@@ -10,4 +10,5 @@ public interface CorrectionService {
     public Correction saveCorrection(Correction correction);
     public List<Correction> findBySolution(Integer solutionId);
     public Correction findById(Integer correctionId) throws ChangeSetPersister.NotFoundException;
+
 }

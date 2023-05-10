@@ -1,5 +1,6 @@
 package com.delia.Gamified.Assignment.App.service.implementations;
 
+import com.delia.Gamified.Assignment.App.model.Correction;
 import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
 import com.delia.Gamified.Assignment.App.model.Task;
@@ -50,5 +51,13 @@ public class SolutionServiceImpl implements SolutionService {
             case GOOD -> solution.setQualification(newQualification);
         }
         solutionRepository.save(solution);
+    }
+
+    @Override
+    public Optional<Correction> hasUserCorrected(Long userId, Solution solution){
+        for(Correction correction : solution.getCorrections()){
+            if(correction.getUser().getId()==userId) return Optional.of(correction);
+        }
+        return Optional.empty();
     }
 }

@@ -1,1 +1,3 @@
 com\delia\Gamified\Assignment\App\GamifiedAssignmentAppApplicationTests.class
+com\delia\Gamified\Assignment\App\repository\tests\TaskRepositoryTest.class
+com\delia\Gamified\Assignment\App\service\tests\TaskServiceTest.class

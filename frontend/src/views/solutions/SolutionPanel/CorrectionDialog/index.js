@@ -52,6 +52,7 @@ const CorrectionDialog = ({ openCorrection, setOpenCorrection, solutionId, setHa
     const create = () => {
         console.log(files);
         correctionService.createCorrection(userId, solutionId, description, qualification, files).then((response) => {
+            console.log('handled');
             setHandled(true);
         });
     };

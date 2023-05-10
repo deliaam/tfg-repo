@@ -88,13 +88,11 @@ public class TaskController {
 
         List<TaskResponse> response = new ArrayList<>();
         for(Task task : tasks){
-            LOGGER.info("task id: " + task.getLesson().getName());
             TaskResponse taskResponse = new TaskResponse();
             taskResponse.setTask(task);
             taskResponse.setActive(taskService.isTaskActive(task));
-            taskResponse.setNumberOfSolutions(0);
             taskResponse.setNumberOfSolutions(task.getSolutions().size());
-            taskResponse.setNumberOfCorrections(0);
+            taskResponse.setNumberOfCorrections(taskService.userCorrectionsInTask(userId, task));
             taskResponse.setAnswered(taskService.hasUserAnswered(userId,task).isPresent());
             taskResponse.setLesson(task.getLesson().getName());
             List<List<String>> files =new ArrayList<>();

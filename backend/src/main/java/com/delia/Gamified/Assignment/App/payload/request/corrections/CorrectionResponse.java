@@ -1,5 +1,7 @@
 package com.delia.Gamified.Assignment.App.payload.request.corrections;
 
+import com.delia.Gamified.Assignment.App.model.Correction;
+import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
 
 import java.util.ArrayList;
@@ -7,10 +9,7 @@ import java.util.List;
 
 public class CorrectionResponse {
 
-    private Solution solution;
-    private Integer numberOfCorrections;
-
-    private String calification;
+    private Correction correction;
 
     private String userName;
 
@@ -46,27 +45,11 @@ public class CorrectionResponse {
         this.userName = userName;
     }
 
-    public Solution getSolution() {
-        return solution;
+    public Correction getCorrection() {
+        return correction;
     }
 
-    public void setSolution(Solution solution) {
-        this.solution = solution;
-    }
-
-    public Integer getNumberOfCorrections() {
-        return numberOfCorrections;
-    }
-
-    public void setNumberOfCorrections(Integer numberOfCorrections) {
-        this.numberOfCorrections = numberOfCorrections;
-    }
-
-    public String getCalification() {
-        return calification;
-    }
-
-    public void setCalification(String calification) {
-        this.calification = calification;
+    public void setCorrection(Correction correction) {
+        this.correction = correction;
     }
 }

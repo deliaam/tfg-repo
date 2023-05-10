@@ -19,11 +19,11 @@ class SolutionService {
             }
         });
     }
-    getSolutions(taskId) {
+    getSolutions(taskId, userId) {
         return axios
             .get(API_URL + 'getSolutions', {
                 headers: { ...authHeader(), 'Content-Type': 'multipart/form-data' },
-                params: { taskId: taskId }
+                params: { taskId: taskId, userId: userId }
             })
             .then((response) => {
                 return response.data;

@@ -94,7 +94,7 @@ public class SolutionController {
     }
 
     @GetMapping("/getSolutions")
-    public List<SolutionResponse> getSolutions(@RequestParam Integer taskId){
+    public List<SolutionResponse> getSolutions(@RequestParam Integer taskId, @RequestParam Long userId){
         List<Solution> solutions = solutionService.findByTask(taskId);
 
         List<SolutionResponse> response = new ArrayList<>();
@@ -102,13 +102,15 @@ public class SolutionController {
             Student student = solution.getStudent();
             SolutionResponse solutionResponse = new SolutionResponse();
             solutionResponse.setSolution(solution);
-            solutionResponse.setNumberOfCorrections(0);
+            solutionResponse.setNumberOfCorrections(solution.getCorrections().size());
             solutionResponse.setUserName(student.getName() +" "+ student.getLastName());
             solutionResponse.setUserId(student.getId());
             List<List<String>> files =new ArrayList<>();
             for(FileDB file: solution.getFiles()){
                 files.add(Arrays.asList(file.getId(),file.getName()));
             }
+            solutionResponse.setCorrected(solutionService.hasUserCorrected(userId,solution).isPresent());
+
             solutionResponse.setFiles(files);
             response.add(solutionResponse);
         }

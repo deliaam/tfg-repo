@@ -2,6 +2,7 @@ package com.delia.Gamified.Assignment.App.controller;
 
 import com.delia.Gamified.Assignment.App.model.*;
 import com.delia.Gamified.Assignment.App.payload.fileupload.ResponseMessage;
+import com.delia.Gamified.Assignment.App.payload.request.corrections.CorrectionResponse;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.CreateCorrectionRequest;
 import com.delia.Gamified.Assignment.App.payload.request.solutions.CreateSolutionRequest;
 import com.delia.Gamified.Assignment.App.payload.request.solutions.SolutionResponse;
@@ -59,9 +60,7 @@ public class CorrectionController {
         }
         Correction correction = new Correction(user,solution,request.getDescription(), request.getQualification(), LocalDateTime.now());
         Correction savedCorrection = correctionService.saveCorrection(correction);
-        solutionService.updateNewQualification(solution, request.getQualification());
-
-
+        solutionService.updateNewQualification(solution,request.getQualification());
         try {
             if(files!=null){
                 for(MultipartFile file: files){
@@ -81,24 +80,23 @@ public class CorrectionController {
         }
     }
 
-    @GetMapping("/getSolutions")
-    public List<SolutionResponse> getSolutions(@RequestParam Integer taskId){
-        List<Solution> solutions = solutionService.findByTask(taskId);
+    @GetMapping("/getCorrections")
+    public List<CorrectionResponse> getCorrections(@RequestParam Integer solutionId){
+        List<Correction> corrections = correctionService.findBySolution(solutionId);
 
-        List<SolutionResponse> response = new ArrayList<>();
-        for(Solution solution : solutions){
-            Student student = solution.getStudent();
-            SolutionResponse solutionResponse = new SolutionResponse();
-            solutionResponse.setSolution(solution);
-            solutionResponse.setNumberOfCorrections(0);
-            solutionResponse.setUserName(student.getName() +" "+ student.getLastName());
-            solutionResponse.setUserId(student.getId());
+        List<CorrectionResponse> response = new ArrayList<>();
+        for(Correction correction : corrections){
+            User user = correction.getUser();
+            CorrectionResponse correctionResponse = new CorrectionResponse();
+            correctionResponse.setCorrection(correction);
+            correctionResponse.setUserName(user.getName() +" "+ user.getLastName());
+            correctionResponse.setUserId(user.getId());
             List<List<String>> files =new ArrayList<>();
-            for(FileDB file: solution.getFiles()){
+            for(FileDB file: correction.getFiles()){
                 files.add(Arrays.asList(file.getId(),file.getName()));
             }
-            solutionResponse.setFiles(files);
-            response.add(solutionResponse);
+            correctionResponse.setFiles(files);
+            response.add(correctionResponse);
         }
 
         return response;
