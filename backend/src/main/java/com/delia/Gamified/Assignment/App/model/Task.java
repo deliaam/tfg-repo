@@ -46,9 +46,12 @@ public class Task {
     @JsonIgnore
     private Set<FileDB> files = new HashSet<>();
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Solution> solutions = new HashSet<>();
+
+    @JsonIgnore
+    private boolean scoreCalculated;
 
     private String filesIds = "";
 
@@ -61,6 +64,7 @@ public class Task {
         this.dateTime = dateTime;
         this.classObj = classObj;
         this.lesson = lesson;
+        this.scoreCalculated = false;
     }
 
     public Set<Solution> getSolutions() {
@@ -139,6 +143,14 @@ public class Task {
         }
 
         return ids;
+    }
+
+    public boolean isScoreCalculated() {
+        return scoreCalculated;
+    }
+
+    public void setScoreCalculated(boolean scoreCalculated) {
+        this.scoreCalculated = scoreCalculated;
     }
 
     public void setFilesIds(String filesIds) {

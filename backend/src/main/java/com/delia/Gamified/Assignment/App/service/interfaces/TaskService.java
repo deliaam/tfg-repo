@@ -5,12 +5,14 @@ import com.delia.Gamified.Assignment.App.model.Student;
 import com.delia.Gamified.Assignment.App.model.Task;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
     public Task saveTask(Task task);
     public List<Task> getAllTasks(Integer classId);
+    public List<Task> getTasksByDateBefore(LocalDateTime dateTime);
     public boolean isTaskActive(Task task) ;
     public Task findById(Integer taskId) throws ChangeSetPersister.NotFoundException;
     public Optional<Solution> hasUserAnswered(Long userId, Task task);

@@ -8,8 +8,10 @@ com\delia\Gamified\Assignment\App\service\jwt\AuthTokenFilter.class
 com\delia\Gamified\Assignment\App\repository\FileDBRepository.class
 com\delia\Gamified\Assignment\App\service\implementations\SolutionServiceImpl.class
 com\delia\Gamified\Assignment\App\payload\request\solutions\CreateSolutionRequest.class
+com\delia\Gamified\Assignment\App\scheduler\ScoreScheduler.class
 com\delia\Gamified\Assignment\App\service\implementations\UserServiceImpl.class
 com\delia\Gamified\Assignment\App\payload\request\solutions\SolutionResponse.class
+com\delia\Gamified\Assignment\App\scheduler\ScoreScheduler$1.class
 com\delia\Gamified\Assignment\App\model\Role.class
 com\delia\Gamified\Assignment\App\GamifiedAssignmentAppApplication.class
 com\delia\Gamified\Assignment\App\controller\CorrectionController.class

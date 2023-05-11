@@ -23,6 +23,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks(Integer classId){return taskRepository.findAllOrderByDateDesc(classId);}
 
     @Override
+    public List<Task> getTasksByDateBefore(LocalDateTime dateTime){return taskRepository.getTasksByDateBefore(dateTime);}
+
+    @Override
     public Task findById(Integer id)  throws ChangeSetPersister.NotFoundException {
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isPresent()) {

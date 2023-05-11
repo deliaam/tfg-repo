@@ -178,7 +178,7 @@ const SolutionsPanel = (props) => {
                                 }}
                                 variant="contained"
                                 size="small"
-                                disabled={userHasHandled || userHasResigned || isTeacher}
+                                disabled={userHasHandled || userHasResigned || isTeacher || !taskObj.active}
                             >
                                 Entregar solución
                             </Button>
@@ -274,7 +274,7 @@ const SolutionsPanel = (props) => {
                                         </Box>
                                     )}
                                     {solutions &&
-                                        (userHasResigned || userHasHandled || isTeacher) &&
+                                        (userHasResigned || userHasHandled || isTeacher || !taskObj.active) &&
                                         solutions.map((solutionObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card

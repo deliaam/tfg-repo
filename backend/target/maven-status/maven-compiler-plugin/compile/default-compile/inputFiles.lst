@@ -51,6 +51,7 @@ C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Ass
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\TaskController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\controller\TeacherController.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\WebSecurityConfig.java
+C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\scheduler\ScoreScheduler.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\implementations\HandleResignationServiceImpl.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\model\User.java
 C:\Users\deli_\Desktop\TFG\tfg-repo\backend\src\main\java\com\delia\Gamified\Assignment\App\service\jwt\AuthTokenFilter.java
