@@ -8,7 +8,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,12 +40,13 @@ public class Solution {
 
     @OneToMany(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<Correction> corrections = new HashSet<>();
+    private List<Correction> corrections = new ArrayList<>();
 
     @OneToMany(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<FileDB> files = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
     private EQualification qualification;
 
     private String filesIds = "";
@@ -121,11 +124,11 @@ public class Solution {
         return ids;
     }
 
-    public Set<Correction> getCorrections() {
+    public List<Correction> getCorrections() {
         return corrections;
     }
 
-    public void setCorrections(Set<Correction> corrections) {
+    public void setCorrections(List<Correction> corrections) {
         this.corrections = corrections;
     }
 

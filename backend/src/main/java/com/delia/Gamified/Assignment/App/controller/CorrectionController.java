@@ -4,8 +4,10 @@ import com.delia.Gamified.Assignment.App.model.*;
 import com.delia.Gamified.Assignment.App.payload.fileupload.ResponseMessage;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.CorrectionResponse;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.CreateCorrectionRequest;
+import com.delia.Gamified.Assignment.App.payload.request.corrections.DeleteCorrectionRequest;
 import com.delia.Gamified.Assignment.App.payload.request.solutions.CreateSolutionRequest;
 import com.delia.Gamified.Assignment.App.payload.request.solutions.SolutionResponse;
+import com.delia.Gamified.Assignment.App.service.implementations.ClassServiceImpl;
 import com.delia.Gamified.Assignment.App.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public class CorrectionController {
 
     @Autowired
     private UserService userService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CorrectionController.class);
 
     @PostMapping( "/create")
     public ResponseEntity createCorrection(@ModelAttribute CreateCorrectionRequest request, @RequestParam(required = false, name = "files") MultipartFile[] files) {
@@ -83,7 +86,9 @@ public class CorrectionController {
     @GetMapping("/getCorrections")
     public List<CorrectionResponse> getCorrections(@RequestParam Integer solutionId){
         List<Correction> corrections = correctionService.findBySolution(solutionId);
-
+        for(Correction correction : corrections){
+            LOGGER.info(correction.getQualification().toString());
+        }
         List<CorrectionResponse> response = new ArrayList<>();
         for(Correction correction : corrections){
             User user = correction.getUser();
@@ -101,5 +106,15 @@ public class CorrectionController {
 
         return response;
 
+    }
+    @PostMapping("/deleteCorrection")
+    public ResponseEntity deleteCorrection(@RequestBody DeleteCorrectionRequest request){
+        try {
+            EQualification newQualification = correctionService.removeCorrection(request.getCorrectionId());
+            return ResponseEntity.status(HttpStatus.OK).body(newQualification);
+
+        }catch (ChangeSetPersister.NotFoundException exception){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("Correction not found! : " + request.getCorrectionId()));
+        }
     }
 }

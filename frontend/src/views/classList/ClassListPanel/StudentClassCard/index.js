@@ -28,7 +28,6 @@ const StudentClassCard = (props) => {
 
     const deleteClass = async () => {
         try {
-            console.log(props.user);
             const response = await ClassService.unjoinClass(props.classObj.id, props.user.id);
             if (response.status === 200) {
                 props.handleDeleteClass(props.classObj.id);

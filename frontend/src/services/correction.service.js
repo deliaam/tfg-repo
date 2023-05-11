@@ -30,6 +30,11 @@ class CorrectionService {
                 return response.data;
             });
     }
+    deleteCorrection(correctionId) {
+        return axios.post(API_URL + 'deleteCorrection', { correctionId }, { headers: authHeader() }).then((response) => {
+            return response.data;
+        });
+    }
 }
 
 export default new CorrectionService();

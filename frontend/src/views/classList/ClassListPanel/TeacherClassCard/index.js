@@ -35,7 +35,6 @@ const TeacherClassCard = (props) => {
     const deleteClass = async () => {
         try {
             const response = await ClassService.deleteClass(classObj.id);
-            console.log(response.status === 200);
             if (response.status) {
                 handleDeleteClass(classObj.id);
             } else {
@@ -47,12 +46,9 @@ const TeacherClassCard = (props) => {
     };
 
     const editClass = async () => {
-        console.log(classObj.id);
-        console.log(name);
         try {
             const response = await ClassService.editClass(classObj.id, editName);
             if (response.status === 200) {
-                console.log('ok');
                 setName(editName);
             } else {
                 throw -1;

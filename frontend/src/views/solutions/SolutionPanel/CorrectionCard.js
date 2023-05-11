@@ -42,6 +42,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import MainCard from 'ui-components/MainCard';
 import DownloadIcon from '@mui/icons-material/Download';
 import parse from 'html-react-parser';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // project imports
 import CorrectionDialog from './CorrectionDialog';
@@ -73,12 +74,31 @@ const ExpandMore = styled((props) => {
     })
 }));
 
-const CorrectionCard = ({ correctionObj, isOwn }) => {
+const CorrectionCard = ({ correctionObj, isOwn, setDeleted, setQualification }) => {
     const [expanded, setExpanded] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+
     const theme = useTheme();
+    const isTeacher = useSelector((state) => state.auth.user.roles).includes('ROLE_TEACHER');
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
+    };
+
+    const deleteCorrection = async () => {
+        console.log(correctionObj.correction.id);
+        try {
+            const response = await correctionService.deleteCorrection(correctionObj.correction.id);
+            setDeleted(true);
+            setQualification(response);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleDelete = () => {
+        deleteCorrection();
+        setOpenDelete(false);
     };
     return (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
@@ -121,7 +141,26 @@ const CorrectionCard = ({ correctionObj, isOwn }) => {
                                 <Grid item>{getIcon(correctionObj.correction.qualification)}</Grid>
                             </Grid>
                         </Grid>
-
+                        {isTeacher && (
+                            <Grid item>
+                                <IconButton
+                                    onClick={() => {
+                                        setOpenDelete(true);
+                                    }}
+                                >
+                                    <DeleteIcon></DeleteIcon>
+                                </IconButton>
+                                <AlertDialog
+                                    open={openDelete}
+                                    setOpen={setOpenDelete}
+                                    title="Estás seguro de que quieres eliminar la corrección?"
+                                    body="La corrección será borrada definitivamente y no podrá ser recuperada, dejando de contar para el cálculo de la calificación total de la solución."
+                                    disagree={true}
+                                    agree={true}
+                                    handle={handleDelete}
+                                ></AlertDialog>
+                            </Grid>
+                        )}
                         <Grid item>
                             <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
                                 <ExpandMoreIcon />
@@ -134,16 +173,16 @@ const CorrectionCard = ({ correctionObj, isOwn }) => {
                         <Typography variant="body1">{<div>{parse(correctionObj.correction.description)}</div>}</Typography>
                         <Box sx={{ p: 2 }}></Box>
 
-                        {correctionObj.files.map((file) => {
+                        {correctionObj.files.map((file, index) => {
                             return (
-                                <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
+                                <Box key={index} sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                     <Typography>{file[1]}</Typography>
-                                    <IconButton>
-                                        <DownloadIcon
-                                            onClick={() => {
-                                                downloadFile(file[0]);
-                                            }}
-                                        ></DownloadIcon>
+                                    <IconButton
+                                        onClick={() => {
+                                            downloadFile(file[0]);
+                                        }}
+                                    >
+                                        <DownloadIcon></DownloadIcon>
                                     </IconButton>
                                 </Box>
                             );

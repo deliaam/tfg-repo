@@ -64,7 +64,6 @@ const TasksPanel = (props) => {
     const getTasks = async () => {
         try {
             const response = await taskService.getTasks(classObj.id, userId);
-            console.log(response);
             setTasks(response);
         } catch (error) {
             console.log(error);

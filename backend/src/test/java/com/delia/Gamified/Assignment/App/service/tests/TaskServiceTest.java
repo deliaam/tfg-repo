@@ -192,7 +192,7 @@ public class TaskServiceTest {
         User user = new User();
         user.setId(1L);
         correction1.setUser(user);
-        solution.setCorrections(Collections.singleton(correction1));
+        solution.setCorrections(Collections.singletonList(correction1));
         task.setSolutions(Collections.singleton(solution));
 
         // Act

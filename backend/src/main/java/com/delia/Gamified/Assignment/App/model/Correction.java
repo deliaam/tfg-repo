@@ -42,7 +42,11 @@ public class Correction {
     private Set<FileDB> files = new HashSet<>();
 
     @NotBlank
+    @Enumerated(EnumType.ORDINAL)
     private EQualification qualification;
+
+    @JsonIgnore
+    private boolean removed;
 
     public Correction(){
 
@@ -53,10 +57,19 @@ public class Correction {
         this.dateTime = dateTime;
         this.user = user;
         this.qualification = qualification;
+        this.setRemoved(false);
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {

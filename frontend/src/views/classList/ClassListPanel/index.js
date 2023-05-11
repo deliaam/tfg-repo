@@ -23,7 +23,6 @@ const ClassListPanel = (props) => {
     const getClasses = async () => {
         try {
             const response = await ClassService.getAllClasses(props.user.id, props.user.roles.includes('ROLE_TEACHER'));
-            console.log(response);
             setClassList(response);
         } catch (error) {
             console.log(error);
@@ -34,7 +33,6 @@ const ClassListPanel = (props) => {
         if (id !== undefined) {
             try {
                 const response = await ClassService.getClass(id);
-                console.log(response);
                 setClass(response);
                 return response;
             } catch (error) {
@@ -49,7 +47,6 @@ const ClassListPanel = (props) => {
 
     const handleDeleteClass = (classId) => {
         const newClassList = classList.filter((cls) => cls.id !== classId);
-        console.log(newClassList);
         setClassList(newClassList);
     };
 
@@ -62,8 +59,6 @@ const ClassListPanel = (props) => {
 
     const location = useLocation();
     const pathnames = location.pathname.split('/').filter((x) => x);
-    console.log(`location: ${JSON.stringify(location)}`);
-    console.log(`pathnames: ${JSON.stringify(pathnames)}`);
 
     return (
         <Grid container direction="column" spacing={3}>

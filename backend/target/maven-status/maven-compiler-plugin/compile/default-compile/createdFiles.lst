@@ -2,6 +2,7 @@ com\delia\Gamified\Assignment\App\payload\request\classes\UpdateRequest.class
 com\delia\Gamified\Assignment\App\controller\HandleResignationController.class
 com\delia\Gamified\Assignment\App\service\jwt\JwtUtils.class
 com\delia\Gamified\Assignment\App\repository\TaskRepository.class
+com\delia\Gamified\Assignment\App\payload\request\corrections\DeleteCorrectionRequest.class
 com\delia\Gamified\Assignment\App\repository\UserRepository.class
 com\delia\Gamified\Assignment\App\service\jwt\AuthTokenFilter.class
 com\delia\Gamified\Assignment\App\repository\FileDBRepository.class

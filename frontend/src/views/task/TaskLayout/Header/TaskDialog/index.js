@@ -50,7 +50,6 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
     const { lessonsList, setLessonsList } = useContext(LessonContext);
     dayjs.locale('es');
     const [date, setDate] = useState(dayjs('2022-05-04T15:30'));
-    console.log(date);
     const [files, setFiles] = useState([]);
     const auxFiles = [...files];
 
@@ -59,29 +58,22 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
         setLesson(event.target.value);
     };
     const create = () => {
-        console.log(files);
-        taskService.create(title, description, files, date.toISOString(), lessonsList[lesson].id).then((response) => {
-            console.log(response);
-        });
+        taskService.create(title, description, files, date.toISOString(), lessonsList[lesson].id).then((response) => {});
     };
 
     const selectFile = (event) => {
         const filesObj = event.target.files;
-        console.log(filesObj);
         for (let i = 0; i < filesObj.length; i++) {
             auxFiles.push(event.target.files[i]);
         }
         setFiles(auxFiles);
-        console.log(`files : ${files}`);
     };
 
     const removeFile = (index) => {
         auxFiles.splice(index, 1);
         setFiles(auxFiles);
     };
-    useEffect(() => {
-        console.log(`files : ${files}`);
-    }, [files]);
+    useEffect(() => {}, [files]);
     const handleCreateTask = () => {
         create();
         setOpenCreate(false);
@@ -164,7 +156,6 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
                                         value={date}
                                         onChange={(newValue) => {
                                             setDate(newValue);
-                                            console.log(newValue.toISOString());
                                         }}
                                     />
                                 </DemoContainer>

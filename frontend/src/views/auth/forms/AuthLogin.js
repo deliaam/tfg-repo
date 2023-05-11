@@ -50,8 +50,6 @@ const FirebaseLogin = (props) => {
         event.preventDefault();
     };
 
-    console.log(props.isLoggedIn);
-
     return (
         <>
             {props.isLoggedIn ? (
@@ -74,7 +72,6 @@ const FirebaseLogin = (props) => {
                     onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                         try {
                             await props.dispatch(login(values.email, values.password));
-                            console.log('dispatched');
                         } catch (err) {
                             console.log(err);
                         }

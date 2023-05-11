@@ -64,11 +64,9 @@ const Header = (props) => {
     const [openCreate, setOpenCreate] = useState(false);
     const [openCreateLesson, setOpenCreateLesson] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
-    console.log(props.tabValue);
     const {
         state: { classObj }
     } = useLocation();
-    console.log(`classObj Header : ${JSON.stringify(classObj)}`);
     const classId = classObj.id;
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
 

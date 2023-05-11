@@ -104,7 +104,6 @@ const FirebaseRegister = (props) => {
                             .then(() => {
                                 setRegistered(true);
                             });
-                        console.log('dispatched');
                     } catch (err) {
                         console.log(err);
                     }

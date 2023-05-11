@@ -50,7 +50,6 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
     const [description, setDescription] = useState('Descripción');
     dayjs.locale('es');
     const [date, setDate] = useState(dayjs('2022-05-04T15:30'));
-    console.log(date);
     const [files, setFiles] = useState([]);
     const auxFiles = [...files];
     const [lesson, setLesson] = useState(0);
@@ -58,7 +57,6 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
     const userId = useSelector((state) => state.auth.user.id);
 
     const create = () => {
-        console.log(files);
         solutionService.createSolution(userId, taskId, description, files).then((response) => {
             setHandled(true);
         });
@@ -66,21 +64,17 @@ const SolutionDialog = ({ openSolution, setOpenSolution, taskId, setHandled }) =
 
     const selectFile = (event) => {
         const filesObj = event.target.files;
-        console.log(filesObj);
         for (let i = 0; i < filesObj.length; i++) {
             auxFiles.push(event.target.files[i]);
         }
         setFiles(auxFiles);
-        console.log(`files : ${files}`);
     };
 
     const removeFile = (index) => {
         auxFiles.splice(index, 1);
         setFiles(auxFiles);
     };
-    useEffect(() => {
-        console.log(`files : ${files}`);
-    }, [files]);
+    useEffect(() => {}, [files]);
     const handleCreateTask = () => {
         create();
         setOpenSolution(false);

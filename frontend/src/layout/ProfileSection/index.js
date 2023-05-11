@@ -72,7 +72,6 @@ const ProfileSection = (props) => {
     const getUser = async () => {
         try {
             const response = await UserService.getStudent(props.user.id, isTeacher);
-            console.log(response);
             setUser(response);
         } catch (error) {
             console.log(error);
@@ -87,8 +86,6 @@ const ProfileSection = (props) => {
         try {
             props.dispatch(logout());
             navigate('/login');
-
-            console.log('dispatched');
         } catch (err) {
             console.log(err);
         }

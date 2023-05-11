@@ -69,18 +69,14 @@ const SolutionsPanel = (props) => {
     const getSolutions = async () => {
         try {
             const response = await solutionService.getSolutions(taskObj.task.id, userId);
-            console.log(response);
             setSolutions(response);
         } catch (error) {
-            console.log(error);
             return {};
         }
     };
     function findAndRemoveMySolution() {
-        console.log('findAndRemoveMySolution');
         for (let i = 0; i < solutions.length; i++) {
             if (solutions[i].userId === userId) {
-                console.log('remove');
                 const removed = solutions.splice(i, 1)[0];
                 setSolutions(solutions);
                 setMySolution(removed);
@@ -90,11 +86,9 @@ const SolutionsPanel = (props) => {
     useEffect(() => {
         findAndRemoveMySolution();
     }, [solutions]);
-    console.log(JSON.stringify(mySolution));
     const userHasHandled = mySolution != null;
 
     const onSolutionClick = (solutionObj) => {
-        console.log('onSolutionClick');
         navigate(`/home/classes/class/task/solution`, { state: { solutionObj: solutionObj, taskObj: taskObj, classObj: classObj } });
     };
 
@@ -118,7 +112,6 @@ const SolutionsPanel = (props) => {
             const response = await handleResignationService.create(userId, taskObj.task.id);
             setUserHasResigned(true);
         } catch (error) {
-            console.log(error);
             return {};
         }
         setOpenResign(false);

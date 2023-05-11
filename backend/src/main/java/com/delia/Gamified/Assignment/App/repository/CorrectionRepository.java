@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface CorrectionRepository extends JpaRepository<Correction, Integer> {
-    @Query("SELECT c FROM Correction c WHERE c.solution.id = :solutionId ORDER BY c.dateTime ASC")
+    @Query("SELECT c FROM Correction c WHERE c.solution.id = :solutionId AND c.removed=false ORDER BY c.qualification ASC")
     List<Correction> findAllBySolutionId(@Param("solutionId")Integer solutionId);
 
 }

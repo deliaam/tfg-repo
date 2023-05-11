@@ -4,8 +4,6 @@ import { apiUrl } from './constant';
 const API_URL = `${apiUrl}/task/`;
 class TaskService {
     create(title, description, files, dateTime, lessonId) {
-        console.log('upload');
-        console.log(files);
         let formData = new FormData();
 
         files.forEach((file) => {

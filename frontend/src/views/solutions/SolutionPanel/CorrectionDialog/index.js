@@ -36,12 +36,11 @@ const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CorrectionDialog = ({ openCorrection, setOpenCorrection, solutionId, setHandled }) => {
+const CorrectionDialog = ({ openCorrection, setOpenCorrection, solutionId, setHandled, setNewQualification }) => {
     const [description, setDescription] = useState('Descripción');
     const [files, setFiles] = useState([]);
     const [qualification, setQualification] = useState();
     const auxFiles = [...files];
-    console.log(qualification);
     const userId = useSelector((state) => state.auth.user.id);
     const qualifications = [
         { value: 'GOOD', label: 'Bien' },
@@ -50,30 +49,26 @@ const CorrectionDialog = ({ openCorrection, setOpenCorrection, solutionId, setHa
     ];
 
     const create = () => {
-        console.log(files);
         correctionService.createCorrection(userId, solutionId, description, qualification, files).then((response) => {
-            console.log('handled');
             setHandled(true);
+            console.log(`response qualification : ${response.data.qualification}`);
+            setNewQualification(response.data.qualification);
         });
     };
 
     const selectFile = (event) => {
         const filesObj = event.target.files;
-        console.log(filesObj);
         for (let i = 0; i < filesObj.length; i++) {
             auxFiles.push(event.target.files[i]);
         }
         setFiles(auxFiles);
-        console.log(`files : ${files}`);
     };
 
     const removeFile = (index) => {
         auxFiles.splice(index, 1);
         setFiles(auxFiles);
     };
-    useEffect(() => {
-        console.log(`files : ${files}`);
-    }, [files]);
+    useEffect(() => {}, [files]);
     const handleCreateCorrection = () => {
         create();
         setOpenCorrection(false);

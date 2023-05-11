@@ -13,7 +13,6 @@ class LessonService {
                 }
             )
             .then((response) => {
-                console.log(`lesson obj : ${JSON.stringify(response.data)}`);
                 return response.data;
             });
     }

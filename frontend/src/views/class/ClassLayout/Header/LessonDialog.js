@@ -12,7 +12,6 @@ const LessonDialog = ({ openCreate, setOpenCreate, classId }) => {
     const handleCreateLesson = async () => {
         try {
             const response = await LessonService.create(title, classId);
-            console.log(`response: ${JSON.stringify(response)}`);
             lessonsList.push(response);
             setLessonsList(lessonsList);
         } catch (error) {

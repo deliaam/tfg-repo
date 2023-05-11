@@ -7,7 +7,6 @@ export const ClassProvider = ({ children }) => {
     const {
         state: { classObj }
     } = useLocation();
-    console.log(classObj);
     return <ClassContext.Provider value={{ classObj }}>{children}</ClassContext.Provider>;
 };
 

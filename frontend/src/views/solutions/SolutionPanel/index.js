@@ -51,6 +51,7 @@ import handleResignationService from 'services/handleResignation.service';
 import correctionService from 'services/correction.service';
 import { getIcon } from 'utils/utils';
 import CorrectionCard from './CorrectionCard';
+import solutionService from 'services/solution.service';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -69,20 +70,20 @@ const SolutionPanel = (props) => {
     const [myCorrection, setMyCorrection] = useState(null);
     const [handled, setHandled] = useState(false);
     const [expanded, setExpanded] = useState(false);
-
+    const [deleted, setDeleted] = useState(false);
     const navigate = useNavigate();
     const {
         state: { solutionObj }
     } = useLocation();
+    const [qualification, setQualification] = useState(solutionObj.solution.qualification);
 
     const theme = useTheme();
     const userId = useSelector((state) => state.auth.user.id);
-
+    const isTeacher = useSelector((state) => state.auth.user.roles).includes('ROLE_TEACHER');
     const getCorrections = async () => {
-        if (solutionObj.userId == userId || solutionObj.corrected || handled) {
+        if (solutionObj.userId == userId || solutionObj.corrected || handled || isTeacher || deleted) {
             try {
                 const response = await correctionService.getCorrections(solutionObj.solution.id);
-                console.log(response);
                 setCorrections(response);
             } catch (error) {
                 console.log(error);
@@ -90,10 +91,10 @@ const SolutionPanel = (props) => {
             }
         }
     };
+
     function findAndRemoveMyCorrection() {
         for (let i = 0; i < corrections.length; i++) {
             if (corrections[i].userId === userId) {
-                console.log('remove');
                 const removed = corrections.splice(i, 1)[0];
                 setCorrections(corrections);
                 setMyCorrection(removed);
@@ -107,7 +108,8 @@ const SolutionPanel = (props) => {
 
     useEffect(() => {
         getCorrections();
-    }, [handled]);
+        setDeleted(false);
+    }, [handled, deleted]);
 
     async function downloadFile(id) {
         const response = await fileService.getFile(id);
@@ -122,7 +124,6 @@ const SolutionPanel = (props) => {
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
-    console.log(`handled : ${handled}`);
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -139,7 +140,9 @@ const SolutionPanel = (props) => {
                                 </Typography>
                             </Grid>
                             <Box sx={{ flexGrow: 1 }} />
-                            <Grid item>{getIcon(solutionObj.solution.qualification)}</Grid>
+                            {(solutionObj.userId == userId || solutionObj.corrected || handled || isTeacher) && (
+                                <Grid item>{getIcon(qualification)}</Grid>
+                            )}
                         </Grid>
                         <Typography variant="body1">{<div>{parse(solutionObj.solution.description)}</div>}</Typography>
                         <Box sx={{ p: 2 }}></Box>
@@ -178,6 +181,7 @@ const SolutionPanel = (props) => {
                                 setOpenCorrection={setOpenCorrection}
                                 solutionId={solutionObj.solution.id}
                                 setHandled={setHandled}
+                                setNewQualification={setQualification}
                             />
                         </Box>
                     </MainCard>
@@ -187,97 +191,24 @@ const SolutionPanel = (props) => {
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {myCorrection && <CorrectionCard correctionObj={myCorrection} isOwn={true} />}
+                                    {myCorrection && (
+                                        <CorrectionCard
+                                            correctionObj={myCorrection}
+                                            isOwn={true}
+                                            setDeleted={setDeleted}
+                                            setQualification={setQualification}
+                                        />
+                                    )}
 
                                     {corrections &&
                                         corrections.map((correctionObj, index) => (
-                                            <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
-                                                <Card
-                                                    sx={{
-                                                        border: '1px solid',
-                                                        borderColor: theme.palette.primary.light,
-                                                        ':hover': {
-                                                            boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
-                                                        },
-                                                        backgroundColor: theme.palette.primary.light,
-                                                        width: '100%',
-                                                        margin: 2
-                                                    }}
-                                                >
-                                                    <CardContent sx={{ p: 2 }}>
-                                                        <Grid
-                                                            container
-                                                            spacing={3}
-                                                            direction="row"
-                                                            alignItems="center"
-                                                            alignContent="center"
-                                                        >
-                                                            <Grid item>
-                                                                <Grid
-                                                                    container
-                                                                    direction="column"
-                                                                    alignItems="left"
-                                                                    justifyContent="space-between"
-                                                                    spacing={1}
-                                                                    alignContent="center"
-                                                                >
-                                                                    <Grid item>
-                                                                        <Typography variant="h3">{correctionObj.userName}</Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Typography variant="body1">
-                                                                            Entregado:{' '}
-                                                                            {dayjs(correctionObj.correction.dateTime).format(
-                                                                                'ddd, DD MMM YYYY HH:mm:ss'
-                                                                            )}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                </Grid>
-                                                            </Grid>
-                                                            <Box sx={{ flexGrow: 1 }} />
-                                                            <Grid item sx={{ marginTop: 1 }}>
-                                                                <Grid container direction="column" alignItems="center" spacing={1}>
-                                                                    <Grid item>{getIcon(correctionObj.correction.qualification)}</Grid>
-                                                                </Grid>
-                                                            </Grid>
-
-                                                            <Grid item>
-                                                                <ExpandMore
-                                                                    expand={expanded}
-                                                                    onClick={handleExpandClick}
-                                                                    aria-expanded={expanded}
-                                                                    aria-label="show more"
-                                                                >
-                                                                    <ExpandMoreIcon />
-                                                                </ExpandMore>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </CardContent>
-                                                    <Collapse in={expanded} timeout="auto" unmountOnExit>
-                                                        <CardContent>
-                                                            <Typography variant="body1">
-                                                                {<div>{parse(correctionObj.correction.description)}</div>}
-                                                            </Typography>
-                                                            <Box sx={{ p: 2 }}></Box>
-
-                                                            {correctionObj.files.map((file) => {
-                                                                return (
-                                                                    <Box sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
-                                                                        <Typography>{file[1]}</Typography>
-                                                                        <IconButton>
-                                                                            <DownloadIcon
-                                                                                onClick={() => {
-                                                                                    downloadFile(file[0]);
-                                                                                }}
-                                                                            ></DownloadIcon>
-                                                                        </IconButton>
-                                                                    </Box>
-                                                                );
-                                                            })}
-                                                        </CardContent>
-                                                    </Collapse>
-                                                </Card>
-                                            </Box>
+                                            <CorrectionCard
+                                                key={index}
+                                                correctionObj={correctionObj}
+                                                isOwn={false}
+                                                setDeleted={setDeleted}
+                                                setQualification={setQualification}
+                                            />
                                         ))}
                                 </CardContent>
                             </Card>

@@ -36,12 +36,12 @@ const Header = (props) => {
     const [classCode, setClassCode] = useState('');
 
     const handleCreateClass = () => {
-        classService.createClass(className, props.user.id).then(() => console.log('class added'));
+        classService.createClass(className, props.user.id);
         setOpenCreate(false);
         setClassName('');
     };
     const handleJoinClass = () => {
-        classService.joinClass(classCode, props.user.id).then(() => console.log('class added'));
+        classService.joinClass(classCode, props.user.id);
         setOpenCreate(false);
         setClassName('');
     };

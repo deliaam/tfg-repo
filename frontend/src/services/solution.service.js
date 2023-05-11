@@ -29,6 +29,16 @@ class SolutionService {
                 return response.data;
             });
     }
+    getSolutionById(solutionId) {
+        return axios
+            .get(API_URL + 'getSolution', {
+                headers: authHeader(),
+                params: { solutionId: solutionId }
+            })
+            .then((response) => {
+                return response.data;
+            });
+    }
 }
 
 export default new SolutionService();

@@ -118,4 +118,14 @@ public class SolutionController {
         return response;
 
     }
+
+    @GetMapping("/getSolution")
+    public ResponseEntity getSolution(Integer solutionId){
+        try {
+            Solution solution = solutionService.findById(solutionId);
+            return ResponseEntity.status(HttpStatus.OK).body(solution);
+        }catch (ChangeSetPersister.NotFoundException exception){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage("Solution not found! : " + solutionId));
+        }
+    }
 }

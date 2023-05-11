@@ -13,12 +13,10 @@ import { ClassContext } from 'contexts/class/ClassContext';
 const BreadcrumbsComponent = () => {
     const location = useLocation();
     const pathnames = location.pathname.split('/').filter((x) => x);
-    console.log('context');
 
     // const { classObj } = useContext(ClassContext) || { classObj: { name: 'Clase' } };
 
     const { state } = useLocation();
-    console.log(`breadcrumbs state : ${JSON.stringify(state)}`);
     function getLink(pathname) {
         switch (pathname) {
             case 'classes':
@@ -55,7 +53,6 @@ const BreadcrumbsComponent = () => {
                     const link = getLink(value);
                     if (link === null) return;
                     const obj = link.obj;
-                    console.log(`link.obj : ${JSON.stringify(obj)}`);
                     return last ? (
                         <Typography color="text.primary" key={to}>
                             {link.name}

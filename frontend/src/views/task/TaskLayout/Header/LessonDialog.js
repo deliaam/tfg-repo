@@ -7,17 +7,14 @@ import { LessonContext } from 'contexts/lesson/LessonContext';
 const LessonDialog = ({ openCreate, setOpenCreate, classId }) => {
     const [title, setTitle] = useState('');
     const { lessonsList, setLessonsList } = useContext(LessonContext);
-    console.log(lessonsList);
 
     const newLessonsList = lessonsList;
     const handleCreateLesson = async () => {
         try {
             const response = await LessonService.create(title, classId);
-            console.log(`response: ${JSON.stringify(response)}`);
             lessonsList.push(response);
             setLessonsList(lessonsList);
         } catch (error) {
-            console.log(error);
             return {};
         }
 
