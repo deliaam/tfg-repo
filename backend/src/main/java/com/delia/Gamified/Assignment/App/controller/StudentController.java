@@ -42,4 +42,8 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+    @GetMapping("/getRanking")
+    public List<Student> getRanking(){
+        return studentService.getAllStudentsOrderedByScore();
+    }
 }

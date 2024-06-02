@@ -3,19 +3,14 @@ package com.delia.Gamified.Assignment.App.service.implementations;
 import com.delia.Gamified.Assignment.App.model.Correction;
 import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
-import com.delia.Gamified.Assignment.App.model.Task;
 import com.delia.Gamified.Assignment.App.repository.SolutionRepository;
-import com.delia.Gamified.Assignment.App.repository.TaskRepository;
 import com.delia.Gamified.Assignment.App.service.interfaces.SolutionService;
-import com.delia.Gamified.Assignment.App.service.interfaces.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class SolutionServiceImpl implements SolutionService {

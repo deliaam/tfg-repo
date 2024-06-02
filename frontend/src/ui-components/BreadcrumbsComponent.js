@@ -9,8 +9,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Typography } from '@mui/material';
 import { useContext } from 'react';
 import { ClassContext } from 'contexts/class/ClassContext';
+import { connect } from 'react-redux';
 
-const BreadcrumbsComponent = () => {
+const BreadcrumbsComponent = (props) => {
     const location = useLocation();
     const pathnames = location.pathname.split('/').filter((x) => x);
 
@@ -22,11 +23,15 @@ const BreadcrumbsComponent = () => {
             case 'classes':
                 return { name: 'Clases', obj: {} };
             case 'class':
-                return { name: state.classObj.name, obj: { classObj: state.classObj } };
+                return { name: props.classObj.name, obj: { classObj: props.classObj } };
+            case 'requests':
+                return { name: 'Requests', obj: { classObj: props.classObj } };
             case 'task':
                 return { name: state.taskObj.task.title, obj: { taskObj: state.taskObj, classObj: state.classObj } };
+            case 'question':
+                return { name: state.questionObj.question.title, obj: { questionObj: state.questionObj, classObj: state.classObj } };
             case 'solution':
-                return { name: state.solutionObj.userName, obj: { solutionObj: state.solutionObj } };
+                return { name: `Solución de ${state.solutionObj.userName}`, obj: { solutionObj: state.solutionObj } };
             default:
                 return null;
         }
@@ -70,4 +75,13 @@ const BreadcrumbsComponent = () => {
     );
 };
 
-export default BreadcrumbsComponent;
+function mapStateToProps(state) {
+    const { user } = state.auth;
+    const { classObj } = state.classObj;
+    return {
+        user,
+        classObj
+    };
+}
+
+export default connect(mapStateToProps)(BreadcrumbsComponent);

@@ -61,7 +61,7 @@ const SolutionsPanel = (props) => {
         state: { taskObj, classObj }
     } = useLocation();
     const [userHasResigned, setUserHasResigned] = useState(taskObj.resigned);
-
+    console.log(taskObj);
     const theme = useTheme();
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     const userId = useSelector((state) => state.auth.user.id);

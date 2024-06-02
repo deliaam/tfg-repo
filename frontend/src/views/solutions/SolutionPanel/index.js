@@ -1,5 +1,5 @@
 import { Box, Breadcrumbs, ButtonBase, Divider, Grid, IconButton } from '@mui/material';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 // filtering imports
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -29,7 +29,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import { useParams } from 'react-router';
 import lessonService from 'services/lesson.service';
-import { useEffect } from 'react';
 import { useContext } from 'react';
 import { LessonContext } from 'contexts/lesson/LessonContext';
 import dayjs from 'dayjs';
@@ -69,14 +68,14 @@ const SolutionPanel = (props) => {
     const [corrections, setCorrections] = useState([]);
     const [myCorrection, setMyCorrection] = useState(null);
     const [handled, setHandled] = useState(false);
-    const [expanded, setExpanded] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const navigate = useNavigate();
     const {
-        state: { solutionObj }
+        state: { solutionObj, correctionId }
     } = useLocation();
+    console.log(solutionObj);
     const [qualification, setQualification] = useState(solutionObj.solution.qualification);
-
+    console.log(correctionId);
     const theme = useTheme();
     const userId = useSelector((state) => state.auth.user.id);
     const isTeacher = useSelector((state) => state.auth.user.roles).includes('ROLE_TEACHER');
@@ -101,10 +100,17 @@ const SolutionPanel = (props) => {
             }
         }
     }
+
+    const elementToScroll = useRef(null);
+
+    useEffect(() => {
+        if (elementToScroll.current) {
+            elementToScroll.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
     useEffect(() => {
         findAndRemoveMyCorrection();
     }, [corrections]);
-    const userHasHandled = myCorrection != null;
 
     useEffect(() => {
         getCorrections();
@@ -121,9 +127,7 @@ const SolutionPanel = (props) => {
         document.body.appendChild(link);
         link.click();
     }
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
+    console.log(corrections);
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -202,13 +206,18 @@ const SolutionPanel = (props) => {
 
                                     {corrections &&
                                         corrections.map((correctionObj, index) => (
-                                            <CorrectionCard
-                                                key={index}
-                                                correctionObj={correctionObj}
-                                                isOwn={false}
-                                                setDeleted={setDeleted}
-                                                setQualification={setQualification}
-                                            />
+                                            <div ref={correctionObj.correction.id == correctionId ? elementToScroll : undefined}>
+                                                <CorrectionCard
+                                                    key={index}
+                                                    correctionObj={correctionObj}
+                                                    isOwn={false}
+                                                    setDeleted={setDeleted}
+                                                    setQualification={setQualification}
+                                                    setHandled={setHandled}
+                                                    handled={handled}
+                                                    scrolled={correctionObj.correction.id == correctionId}
+                                                />
+                                            </div>
                                         ))}
                                 </CardContent>
                             </Card>
@@ -222,6 +231,7 @@ const SolutionPanel = (props) => {
 
 function mapStateToProps(state) {
     const { user } = state.auth;
+    console.log(user);
     return {
         user
     };

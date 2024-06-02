@@ -13,16 +13,19 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import MainCard from 'ui-components/MainCard';
 import BreadcrumbsComponent from 'ui-components/BreadcrumbsComponent';
+import { useDispatch } from 'react-redux';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const ClassListPanel = (props) => {
     const [classList, setClassList] = useState(undefined);
     const [classObj, setClass] = useState(undefined);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const getClasses = async () => {
         try {
             const response = await ClassService.getAllClasses(props.user.id, props.user.roles.includes('ROLE_TEACHER'));
+            console.log(response);
             setClassList(response);
         } catch (error) {
             console.log(error);
@@ -53,6 +56,10 @@ const ClassListPanel = (props) => {
     const onClassClick = async (classId) => {
         const response = await getClassById(classId);
         if (response !== undefined) {
+            dispatch({
+                type: 'SAVE_CLASS',
+                payload: { classObj: response }
+            });
             navigate(`/home/classes/class/`, { state: { classObj: response } });
         }
     };

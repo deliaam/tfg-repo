@@ -48,6 +48,9 @@ public class Correction {
     @JsonIgnore
     private boolean removed;
 
+    @OneToOne(mappedBy = "correction")
+    private Revision revisionRequest;
+
     public Correction(){
 
     }
@@ -127,5 +130,13 @@ public class Correction {
 
     public void setQualification(EQualification qualification) {
         this.qualification = qualification;
+    }
+
+    public Revision getRevisionRequest() {
+        return revisionRequest;
+    }
+
+    public void setRevisionRequest(Revision revisionRequest) {
+        this.revisionRequest = revisionRequest;
     }
 }

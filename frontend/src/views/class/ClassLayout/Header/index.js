@@ -31,6 +31,7 @@ import ClassService from 'services/class.service';
 import MainCard from 'ui-components/MainCard';
 import TaskDialog from './TaskDialog';
 import LessonDialog from './LessonDialog';
+import QuestionDialog from './QuestionDialog';
 
 // assets
 import { IconMenu2, IconPlus } from '@tabler/icons';
@@ -46,6 +47,7 @@ import SpeedDial from '@mui/material/SpeedDial';
 import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
+import QuizIcon from '@mui/icons-material/Quiz';
 import ShareIcon from '@mui/icons-material/Share';
 import Slide from '@mui/material/Slide';
 import AppBar from '@mui/material/AppBar';
@@ -63,11 +65,13 @@ const Header = (props) => {
     const theme = useTheme();
     const [openCreate, setOpenCreate] = useState(false);
     const [openCreateLesson, setOpenCreateLesson] = useState(false);
+    const [openCreateQuestion, setOpenCreateQuestion] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl2, setAnchorEl2] = useState(null);
     const {
         state: { classObj }
     } = useLocation();
-    const classId = classObj.id;
+
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
 
     const handleClick = (event) => {
@@ -75,6 +79,12 @@ const Header = (props) => {
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    const handleClick2 = (event) => {
+        setAnchorEl2(event.currentTarget);
+    };
+    const handleClose2 = () => {
+        setAnchorEl2(null);
     };
     return (
         <>
@@ -150,7 +160,53 @@ const Header = (props) => {
                         <IconPlus />
                     </IconButton>
                     <TaskDialog openCreate={openCreate} setOpenCreate={setOpenCreate} />
-                    <LessonDialog openCreate={openCreateLesson} setOpenCreate={setOpenCreateLesson} classId={classId}></LessonDialog>
+                    <LessonDialog openCreate={openCreateLesson} setOpenCreate={setOpenCreateLesson} classId={classObj.id}></LessonDialog>
+                </>
+            )}
+            <Menu
+                id="menu-create2"
+                anchorEl={anchorEl2}
+                keepMounted
+                open={Boolean(anchorEl2)}
+                onClose={handleClose2}
+                variant="selectedMenu"
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                }}
+            >
+                <MenuItem
+                    onClick={() => setOpenCreateQuestion(true)}
+                    sx={{ p: 1.5, '&:hover': { background: theme.palette.secondary.light } }}
+                >
+                    <QuizIcon sx={{ mr: 1.75 }} /> Crear pregunta
+                </MenuItem>
+            </Menu>
+            {!isTeacher && props.tabValue == 2 && (
+                <>
+                    <IconButton
+                        size="large"
+                        sx={{
+                            backgroundColor: theme.palette.secondary.light,
+                            color: theme.palette.secondary.dark,
+                            '&:hover': {
+                                background: theme.palette.secondary.dark,
+                                color: theme.palette.secondary.light
+                            },
+                            marginRight: 1
+                        }}
+                        aria-controls="menu-create2"
+                        aria-haspopup="true"
+                        onClick={handleClick2}
+                        aria-label="createquestion"
+                    >
+                        <IconPlus />
+                    </IconButton>
+                    <QuestionDialog openCreate={openCreateQuestion} setOpenCreate={setOpenCreateQuestion} />
                 </>
             )}
             <ProfileSection />

@@ -5,9 +5,6 @@ import com.delia.Gamified.Assignment.App.payload.fileupload.ResponseMessage;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.CorrectionResponse;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.CreateCorrectionRequest;
 import com.delia.Gamified.Assignment.App.payload.request.corrections.DeleteCorrectionRequest;
-import com.delia.Gamified.Assignment.App.payload.request.solutions.CreateSolutionRequest;
-import com.delia.Gamified.Assignment.App.payload.request.solutions.SolutionResponse;
-import com.delia.Gamified.Assignment.App.service.implementations.ClassServiceImpl;
 import com.delia.Gamified.Assignment.App.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,6 +92,8 @@ public class CorrectionController {
             correctionResponse.setCorrection(correction);
             correctionResponse.setUserName(user.getName() +" "+ user.getLastName());
             correctionResponse.setUserId(user.getId());
+            correctionResponse.setRevisionRequested(correction.getRevisionRequest() != null);
+
             List<List<String>> files =new ArrayList<>();
             for(FileDB file: correction.getFiles()){
                 files.add(Arrays.asList(file.getId(),file.getName()));

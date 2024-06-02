@@ -26,6 +26,11 @@ public class Student extends User {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<HandleResignation> handleResignations = new HashSet<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Revision> revisionRequests = new HashSet<>();
+
     private double score;
 
     public Student(){
@@ -42,6 +47,14 @@ public class Student extends User {
 
     public void setHandleResignations(Set<HandleResignation> handleResignations) {
         this.handleResignations = handleResignations;
+    }
+
+    public Set<Revision> getRevisionRequests() {
+        return revisionRequests;
+    }
+
+    public void setRevisionRequests(Set<Revision> revisionRequests) {
+        this.revisionRequests = revisionRequests;
     }
 
     public Set<Class> getClasses() {

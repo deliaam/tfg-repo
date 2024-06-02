@@ -4,9 +4,7 @@ import com.delia.Gamified.Assignment.App.controller.CorrectionController;
 import com.delia.Gamified.Assignment.App.model.Correction;
 import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
-import com.delia.Gamified.Assignment.App.model.Task;
 import com.delia.Gamified.Assignment.App.repository.CorrectionRepository;
-import com.delia.Gamified.Assignment.App.repository.SolutionRepository;
 import com.delia.Gamified.Assignment.App.service.interfaces.CorrectionService;
 import com.delia.Gamified.Assignment.App.service.interfaces.SolutionService;
 import org.slf4j.Logger;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CorrectionServiceImpl implements CorrectionService {

@@ -50,6 +50,10 @@ public class Task {
     @JsonIgnore
     private Set<Solution> solutions = new HashSet<>();
 
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Question> questions = new HashSet<>();
+
     @JsonIgnore
     private boolean scoreCalculated;
 
@@ -65,6 +69,14 @@ public class Task {
         this.classObj = classObj;
         this.lesson = lesson;
         this.scoreCalculated = false;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
 
     public Set<Solution> getSolutions() {

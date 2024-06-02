@@ -4,7 +4,6 @@ import com.delia.Gamified.Assignment.App.model.*;
 import com.delia.Gamified.Assignment.App.service.implementations.ClassServiceImpl;
 import com.delia.Gamified.Assignment.App.service.interfaces.StudentService;
 import com.delia.Gamified.Assignment.App.service.interfaces.TaskService;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

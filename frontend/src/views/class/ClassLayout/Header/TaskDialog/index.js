@@ -50,7 +50,6 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
     const { lessonsList, setLessonsList } = useContext(LessonContext);
     dayjs.locale('es');
     const [date, setDate] = useState(dayjs('2023-05-04T15:30'));
-    console.log(date);
     const [files, setFiles] = useState([]);
     const auxFiles = [...files];
 

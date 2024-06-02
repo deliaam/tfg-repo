@@ -3,7 +3,6 @@ package com.delia.Gamified.Assignment.App.service.interfaces;
 import com.delia.Gamified.Assignment.App.model.Correction;
 import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
-import com.delia.Gamified.Assignment.App.model.Task;
 import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.delia.Gamified.Assignment.App.payload.request.corrections;
 
 import com.delia.Gamified.Assignment.App.model.Correction;
-import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
 
 import java.util.ArrayList;
@@ -14,6 +13,8 @@ public class CorrectionResponse {
     private String userName;
 
     private Long userId;
+
+    private Boolean revisionRequested;
 
     private List<List<String>> files =new ArrayList<>();
 
@@ -51,5 +52,13 @@ public class CorrectionResponse {
 
     public void setCorrection(Correction correction) {
         this.correction = correction;
+    }
+
+    public Boolean getRevisionRequested() {
+        return revisionRequested;
+    }
+
+    public void setRevisionRequested(Boolean revisionRequested) {
+        this.revisionRequested = revisionRequested;
     }
 }

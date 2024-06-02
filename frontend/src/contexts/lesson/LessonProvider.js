@@ -14,7 +14,7 @@ export const LessonProvider = ({ children }) => {
                 setLessonsList(response);
             } catch (error) {
                 console.log(error);
-                setLessonsList({});
+                setLessonsList([]);
             }
         }
     };
@@ -22,7 +22,6 @@ export const LessonProvider = ({ children }) => {
     useEffect(() => {
         getClassLessons();
     }, []);
-
     return <LessonContext.Provider value={{ lessonsList, setLessonsList }}>{children}</LessonContext.Provider>;
 };
 

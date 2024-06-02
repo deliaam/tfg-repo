@@ -3,6 +3,7 @@ import MainCard from 'ui-components/MainCard';
 
 import { TabPanel } from '@mui/lab';
 import TasksPanel from './TasksPanel';
+import QuestionsPanel from './QuestionsPanel';
 import { useParams } from 'react-router';
 
 // ==============================|| TYPOGRAPHY ||============================== //
@@ -13,7 +14,9 @@ const ClassPanel = () => {
             <TabPanel value="1">
                 <TasksPanel />
             </TabPanel>
-            <TabPanel value="2">Preguntas</TabPanel>
+            <TabPanel value="2">
+                <QuestionsPanel />
+            </TabPanel>
         </>
     );
 };

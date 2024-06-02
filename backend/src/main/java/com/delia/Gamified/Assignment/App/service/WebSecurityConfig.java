@@ -73,6 +73,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/solution/**").permitAll()
                 .requestMatchers("/handleResignation/**").permitAll()
                 .requestMatchers("/correction/**").permitAll()
+                .requestMatchers("/revision/**").permitAll()
+                .requestMatchers("/question/**").permitAll()
+                .requestMatchers("/response/**").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());

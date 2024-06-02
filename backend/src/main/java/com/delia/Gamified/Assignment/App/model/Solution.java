@@ -26,7 +26,7 @@ public class Solution {
 
     @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "task_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

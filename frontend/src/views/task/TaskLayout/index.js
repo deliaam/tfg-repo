@@ -76,34 +76,36 @@ const ClassLayout = () => {
         setTabValue(newValue);
     };
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            {/* header */}
-            <TabContext value={tabValue}>
-                <AppBar
-                    enableColorOnDark
-                    position="fixed"
-                    color="inherit"
-                    elevation={0}
-                    sx={{
-                        bgcolor: theme.palette.background.default,
-                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                    }}
-                >
-                    <Toolbar>
-                        <Header tabValue={tabValue} handleTabChange={handleTabChange} />
-                    </Toolbar>
-                </AppBar>
+        <LessonProvider>
+            <Box sx={{ display: 'flex' }}>
+                <CssBaseline />
+                {/* header */}
+                <TabContext value={tabValue}>
+                    <AppBar
+                        enableColorOnDark
+                        position="fixed"
+                        color="inherit"
+                        elevation={0}
+                        sx={{
+                            bgcolor: theme.palette.background.default,
+                            transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                        }}
+                    >
+                        <Toolbar>
+                            <Header tabValue={tabValue} handleTabChange={handleTabChange} />
+                        </Toolbar>
+                    </AppBar>
 
-                {/* drawer */}
-                <Sidebar menuItems={[classes, requests, ranking, help]} />
+                    {/* drawer */}
+                    <Sidebar menuItems={[classes, requests, ranking, help]} />
 
-                {/* main content */}
-                <Main theme={theme} open={leftDrawerOpened}>
-                    <Outlet />
-                </Main>
-            </TabContext>
-        </Box>
+                    {/* main content */}
+                    <Main theme={theme} open={leftDrawerOpened}>
+                        <Outlet />
+                    </Main>
+                </TabContext>
+            </Box>
+        </LessonProvider>
     );
 };
 

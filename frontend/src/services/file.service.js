@@ -19,7 +19,7 @@ class FileService {
     getFile(id) {
         return axios.get(API_URL + 'getFile', { params: { id: id }, responseType: 'blob' }).then((response) => {
             const contentDisposition = response.headers['content-disposition'];
-            const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+            const filenameMatch = contentDisposition.match(/"(.+)"/);
 
             return { data: response.data, fileName: filenameMatch };
         });

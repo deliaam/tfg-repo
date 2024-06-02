@@ -10,7 +10,7 @@ const requests = {
             id: 'requests',
             title: 'Peticiones de revisión',
             type: 'item',
-            url: '/home/requests/',
+            url: '/home/classes/class/requests',
             icon: NotificationsIcon,
             breadcrumbs: false
         }

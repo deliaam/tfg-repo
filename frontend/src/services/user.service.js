@@ -9,6 +9,12 @@ class UserService {
             return response.data;
         });
     }
+
+    getRanking() {
+        return axios.get(API_URL + 'student/' + 'getRanking', { headers: authHeader() }).then((response) => {
+            return response.data;
+        });
+    }
 }
 
 export default new UserService();

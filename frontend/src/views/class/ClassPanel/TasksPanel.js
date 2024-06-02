@@ -38,6 +38,8 @@ import { esES } from '@mui/x-date-pickers';
 import { connect, useSelector } from 'react-redux';
 import BreadcrumbsComponent from 'ui-components/BreadcrumbsComponent';
 import { ClassContext } from 'contexts/class/ClassContext';
+import { TaskContext } from 'contexts/task/TaskContext';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const TasksPanel = (props) => {
@@ -48,8 +50,7 @@ const TasksPanel = (props) => {
         handled: true,
         closed: true
     });
-    const [tasks, setTasks] = useState(undefined);
-
+    const { tasksList, setTasksList } = useContext(TaskContext);
     const { pending, handled, closed } = state;
     const {
         state: { classObj }
@@ -60,16 +61,6 @@ const TasksPanel = (props) => {
     const theme = useTheme();
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     dayjs.locale('es');
-
-    const getTasks = async () => {
-        try {
-            const response = await taskService.getTasks(classObj.id, userId);
-            setTasks(response);
-        } catch (error) {
-            console.log(error);
-            return {};
-        }
-    };
     const handleStateChange = (event) => {
         setState({
             ...state,
@@ -86,9 +77,6 @@ const TasksPanel = (props) => {
         navigate(`/home/classes/class/task`, { state: { taskObj: taskObj, classObj: classObj } });
     };
 
-    useEffect(() => {
-        getTasks();
-    }, []);
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -100,8 +88,8 @@ const TasksPanel = (props) => {
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {tasks &&
-                                        tasks.map((taskObj, index) => (
+                                    {tasksList &&
+                                        tasksList.map((taskObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card
                                                     sx={{

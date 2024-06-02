@@ -9,4 +9,5 @@ public interface StudentService {
     public Student saveStudent(Student student);
     public Student findById(Long id)  throws ChangeSetPersister.NotFoundException;
     public List<Student> getAllStudents();
+    public List<Student> getAllStudentsOrderedByScore();
 }

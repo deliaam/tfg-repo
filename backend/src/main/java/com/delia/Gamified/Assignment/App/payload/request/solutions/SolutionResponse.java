@@ -1,6 +1,5 @@
 package com.delia.Gamified.Assignment.App.payload.request.solutions;
 
-import com.delia.Gamified.Assignment.App.model.EQualification;
 import com.delia.Gamified.Assignment.App.model.Solution;
 
 import java.util.ArrayList;
