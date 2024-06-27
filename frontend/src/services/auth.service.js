@@ -27,6 +27,15 @@ class AuthService {
             teacherKey
         });
     }
+    verify(token) {
+        return axios
+            .get(API_URL + 'verify', {
+                params: { token }
+            })
+            .then((response) => {
+                return response.data;
+            });
+    }
 }
 
 export default new AuthService();

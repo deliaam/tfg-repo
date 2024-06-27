@@ -7,6 +7,7 @@ import MinimalLayout from 'layout/MinimalLayout';
 // login option 3 routing
 const AuthLogin3 = Loadable(lazy(() => import('views/auth/Login3')));
 const AuthRegister3 = Loadable(lazy(() => import('views/auth/Register3')));
+const Verify = Loadable(lazy(() => import('views/auth/Verify')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -21,6 +22,10 @@ const AuthenticationRoutes = {
         {
             path: 'register',
             element: <AuthRegister3 />
+        },
+        {
+            path: 'verify',
+            element: <Verify />
         }
     ]
 };

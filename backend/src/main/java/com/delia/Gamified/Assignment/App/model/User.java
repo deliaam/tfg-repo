@@ -29,6 +29,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(unique = true)
+    private String verificationToken;
+
+    @Column(nullable = false)
+    private boolean verified = false;
+
     public User() {
     }
 
@@ -37,6 +43,23 @@ public class User {
         this.lastName = lastName;
         this.username = username;
         this.password = password;
+    }
+
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     public Long getId() {

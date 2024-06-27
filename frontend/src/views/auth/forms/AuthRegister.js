@@ -29,12 +29,11 @@ import { Formik } from 'formik';
 // project imports
 import AnimateButton from 'ui-components/AnimateButton';
 import { strengthColor, strengthIndicator } from './password-strength';
-
+import Loader from 'ui-components/Loader';
+import AlertDialog from 'ui-components/AlertDialog';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-// ===========================|| FIREBASE - REGISTER ||=========================== //
 
 const FirebaseRegister = (props) => {
     const theme = useTheme();
@@ -46,15 +45,13 @@ const FirebaseRegister = (props) => {
     // User data
     const [role, setRole] = useState('student');
 
+    const [loading, setLoading] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
     const [registered, setRegistered] = useState(false);
+
     // Handle user data
     const handleRoleChange = (event) => {
         setRole(event.target.value);
-    };
-
-    //
-    const googleHandler = async () => {
-        console.error('Register');
     };
 
     const handleClickShowPassword = () => {
@@ -75,8 +72,14 @@ const FirebaseRegister = (props) => {
         changePassword('123456');
     }, []);
 
+    const handleAlertClose = () => {
+        setAlertOpen(false);
+        setRegistered(true);
+    };
+
     return (
         <>
+            {loading && <Loader />}
             <Formik
                 initialValues={{
                     email: '',
@@ -98,14 +101,17 @@ const FirebaseRegister = (props) => {
                     ...(role === 'teacher' && { teacherKey: Yup.string().max(255).required('Introducir una clave') })
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                    setLoading(true);
                     try {
                         await props
                             .dispatch(register(values.name, values.lastName, values.email, values.password, [role], values.teacherKey))
                             .then(() => {
-                                setRegistered(true);
+                                setLoading(false);
+                                setAlertOpen(true);
                             });
                     } catch (err) {
-                        console.log(err);
+                        setLoading(false);
+                        setErrors({ submit: err.message });
                     }
                 }}
             >
@@ -293,6 +299,14 @@ const FirebaseRegister = (props) => {
                     </form>
                 )}
             </Formik>
+            <AlertDialog
+                open={alertOpen}
+                setOpen={setAlertOpen}
+                title="Registro completado"
+                body="Se ha enviado un enlace de verificación a tu correo electrónico. Por favor, verifica tu cuenta para poder iniciar sesión."
+                agree
+                handle={handleAlertClose}
+            />
         </>
     );
 };

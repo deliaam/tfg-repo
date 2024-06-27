@@ -54,7 +54,7 @@ export const login = (username, password) => (dispatch) => {
                 payload: message
             });
 
-            return Promise.reject();
+            return Promise.reject(error);
         }
     );
 };

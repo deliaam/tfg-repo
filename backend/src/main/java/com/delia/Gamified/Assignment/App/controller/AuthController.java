@@ -3,6 +3,7 @@ package com.delia.Gamified.Assignment.App.controller;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.delia.Gamified.Assignment.App.model.*;
@@ -13,19 +14,19 @@ import com.delia.Gamified.Assignment.App.payload.jwtresponse.MessageResponse;
 import com.delia.Gamified.Assignment.App.repository.RoleRepository;
 import com.delia.Gamified.Assignment.App.repository.UserRepository;
 import com.delia.Gamified.Assignment.App.service.implementations.UserDetailsImpl;
+import com.delia.Gamified.Assignment.App.service.interfaces.UserService;
 import com.delia.Gamified.Assignment.App.service.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -48,9 +49,31 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private UserService userService;
+
     private final String TEACHER_KEY = "^DO4A%cD1^jZ29";
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        User user;
+        try {
+            user = userService.findByUsername(loginRequest.getUsername());
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.badRequest().body("El usuario no existe");
+        }
+
+        if (!user.isVerified()) {
+            String token = UUID.randomUUID().toString();
+            user.setVerificationToken(token);
+            userRepository.save(user);
+
+            sendVerificationEmail(user, token);
+
+            return ResponseEntity.badRequest().body("El correo no está verificado. Se ha enviado un correo con el enlace de verificaión.");
+        }
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -62,6 +85,7 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
@@ -91,6 +115,8 @@ public class AuthController {
                     encoder.encode(signUpRequest.getPassword()));
         }
 
+        String token = UUID.randomUUID().toString();
+        user.setVerificationToken(token);
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -120,7 +146,34 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
-
+        sendVerificationEmail(user, token);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyUser(@RequestParam("token") String token) {
+        try {
+            userService.verifyUser(token);
+            return ResponseEntity.ok("Email verified successfully.");
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.badRequest().body("Invalid or expired token");
+        }
+    }
+
+    public void sendVerificationEmail(User user, String token) {
+        String subject = "Verificar cuenta";
+        String senderName = "UPV Etsinf";
+        String mailContent = "Querido/a " + user.getName() + ",\n\n";
+        mailContent += "Por favor, haga click en el siguiente enlace para confirmar su registro:\n\n";
+        mailContent += "http://localhost:3000/verify?token=" + token + "\n\n";
+        mailContent += "Gracias,\nUPV Etsinf";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getUsername());
+        message.setSubject(subject);
+        message.setText(mailContent);
+        message.setFrom(senderName + "<deli_delia19@hotmail.es>");
+
+        mailSender.send(message);
     }
 }

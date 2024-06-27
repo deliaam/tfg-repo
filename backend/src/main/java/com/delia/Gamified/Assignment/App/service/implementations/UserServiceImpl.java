@@ -27,4 +27,25 @@ public class UserServiceImpl implements UserService {
             throw new ChangeSetPersister.NotFoundException();
         }
     }
+
+    public User findByUsername(String userName) throws ChangeSetPersister.NotFoundException {
+        Optional<User> optionalUser = userRepository.findByUsername(userName);
+        if (optionalUser.isPresent()) {
+            return optionalUser.get();
+        } else {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+    }
+
+    public void verifyUser(String token) throws ChangeSetPersister.NotFoundException {
+        Optional<User> optionalUser = userRepository.findByVerificationToken(token);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setVerified(true);
+            user.setVerificationToken(null); // Clear the token after verification
+            userRepository.save(user);
+        } else {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+    }
 }

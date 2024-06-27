@@ -20,9 +20,6 @@ public class Student extends User {
             inverseJoinColumns = { @JoinColumn(name = "class_id") })
     private Set<Class> classes = new HashSet<>();
 
-    @ElementCollection
-    private Set<String> solutions = new HashSet<>();
-
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<HandleResignation> handleResignations = new HashSet<>();

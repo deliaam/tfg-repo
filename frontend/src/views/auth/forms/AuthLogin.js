@@ -26,7 +26,8 @@ import { Formik } from 'formik';
 
 // project imports
 import AnimateButton from 'ui-components/AnimateButton';
-
+import Loader from 'ui-components/Loader';
+import AlertDialog from 'ui-components/AlertDialog';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -36,12 +37,12 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const FirebaseLogin = (props) => {
     const theme = useTheme();
     const [checked, setChecked] = useState(true);
-
-    const googleHandler = async () => {
-        console.error('Login');
-    };
-
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertBody, setAlertBody] = useState('');
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -50,8 +51,13 @@ const FirebaseLogin = (props) => {
         event.preventDefault();
     };
 
+    const handleAlertClose = () => {
+        setAlertOpen(false);
+    };
+
     return (
         <>
+            {loading && <Loader />}
             {props.isLoggedIn ? (
                 <Navigate to={`/home/classes/`} replace={true} />
             ) : (
@@ -70,10 +76,25 @@ const FirebaseLogin = (props) => {
                         password: Yup.string().max(255).required('Introduce la contraseña')
                     })}
                     onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                        setLoading(true);
                         try {
                             await props.dispatch(login(values.email, values.password));
                         } catch (err) {
+                            setLoading(false);
+                            console.log('error catched');
                             console.log(err);
+                            const errorMessage = err.response?.data || 'Hubo un error al iniciar sesión. Por favor, intenta nuevamente.';
+                            if (errorMessage.includes('Correo no verificado')) {
+                                setAlertTitle('Verificación de correo requerida');
+                                setAlertBody(
+                                    'Tu correo no está verificado. Se ha enviado un enlace de verificación a tu correo electrónico.'
+                                );
+                            } else {
+                                setAlertTitle('Error en el inicio de sesión');
+                                setAlertBody(errorMessage);
+                            }
+                            setAlertOpen(true);
+                            setErrors({ submit: errorMessage });
                         }
                     }}
                 >
@@ -174,6 +195,7 @@ const FirebaseLogin = (props) => {
                     )}
                 </Formik>
             )}
+            <AlertDialog open={alertOpen} setOpen={setAlertOpen} title={alertTitle} body={alertBody} agree handle={handleAlertClose} />
         </>
     );
 };

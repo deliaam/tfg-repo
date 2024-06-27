@@ -16,9 +16,6 @@ public class Teacher extends User{
     @JsonIgnore
     private Set<Class> classes = new HashSet<>();
 
-    @ElementCollection
-    private Set<String> notifications = new HashSet<>();
-
     public Teacher(){
 
     }
@@ -38,11 +35,4 @@ public class Teacher extends User{
         this.classes = classes;
     }
 
-    public Set<String> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<String> notifications) {
-        this.notifications = notifications;
-    }
 }
