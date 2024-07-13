@@ -11,6 +11,9 @@ import Header from './Header';
 import Sidebar from 'layout/Sidebar';
 import { drawerWidth } from 'themes/constant';
 import LessonProvider from 'contexts/lesson/LessonProvider';
+import QuestionProvider from 'contexts/question/QuestionProvider';
+import ClassProvider from 'contexts/class/ClassProvider';
+import TaskProvider from 'contexts/task/TaskProvider';
 
 // assets
 import { TabContext } from '@mui/lab';
@@ -75,37 +78,47 @@ const ClassLayout = () => {
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
+    const menuItemsTeacher = [classes, requests, ranking, help];
+    const menuItemsStudent = [classes, ranking, help];
+
+    const userRole = useSelector((state) => state.auth.user.roles[0]);
     return (
-        <LessonProvider>
-            <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                {/* header */}
-                <TabContext value={tabValue}>
-                    <AppBar
-                        enableColorOnDark
-                        position="fixed"
-                        color="inherit"
-                        elevation={0}
-                        sx={{
-                            bgcolor: theme.palette.background.default,
-                            transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                        }}
-                    >
-                        <Toolbar>
-                            <Header tabValue={tabValue} handleTabChange={handleTabChange} />
-                        </Toolbar>
-                    </AppBar>
+        <ClassProvider>
+            <LessonProvider>
+                <TaskProvider>
+                    <QuestionProvider>
+                        <Box sx={{ display: 'flex' }}>
+                            <CssBaseline />
+                            {/* header */}
+                            <TabContext value={tabValue}>
+                                <AppBar
+                                    enableColorOnDark
+                                    position="fixed"
+                                    color="inherit"
+                                    elevation={0}
+                                    sx={{
+                                        bgcolor: theme.palette.background.default,
+                                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                                    }}
+                                >
+                                    <Toolbar>
+                                        <Header tabValue={tabValue} handleTabChange={handleTabChange} />
+                                    </Toolbar>
+                                </AppBar>
 
-                    {/* drawer */}
-                    <Sidebar menuItems={[classes, requests, ranking, help]} />
+                                {/* drawer */}
+                                <Sidebar menuItems={userRole === 'ROLE_STUDENT' ? menuItemsStudent : menuItemsTeacher} />
 
-                    {/* main content */}
-                    <Main theme={theme} open={leftDrawerOpened}>
-                        <Outlet />
-                    </Main>
-                </TabContext>
-            </Box>
-        </LessonProvider>
+                                {/* main content */}
+                                <Main theme={theme} open={leftDrawerOpened}>
+                                    <Outlet />
+                                </Main>
+                            </TabContext>
+                        </Box>
+                    </QuestionProvider>
+                </TaskProvider>
+            </LessonProvider>
+        </ClassProvider>
     );
 };
 

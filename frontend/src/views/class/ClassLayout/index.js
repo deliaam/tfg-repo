@@ -22,6 +22,7 @@ import help from 'menu-items/help';
 import requests from 'menu-items/requests';
 import ranking from 'menu-items/ranking';
 import ClassProvider from 'contexts/class/ClassProvider';
+import QuestionProvider from 'contexts/question/QuestionProvider';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -85,34 +86,36 @@ const ClassLayout = (props) => {
         <ClassProvider>
             <LessonProvider>
                 <TaskProvider>
-                    <Box sx={{ display: 'flex' }}>
-                        <CssBaseline />
-                        {/* header */}
-                        <TabContext value={tabValue}>
-                            <AppBar
-                                enableColorOnDark
-                                position="fixed"
-                                color="inherit"
-                                elevation={0}
-                                sx={{
-                                    bgcolor: theme.palette.background.default,
-                                    transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                                }}
-                            >
-                                <Toolbar>
-                                    <Header tabValue={tabValue} handleTabChange={handleTabChange} />
-                                </Toolbar>
-                            </AppBar>
+                    <QuestionProvider>
+                        <Box sx={{ display: 'flex' }}>
+                            <CssBaseline />
+                            {/* header */}
+                            <TabContext value={tabValue}>
+                                <AppBar
+                                    enableColorOnDark
+                                    position="fixed"
+                                    color="inherit"
+                                    elevation={0}
+                                    sx={{
+                                        bgcolor: theme.palette.background.default,
+                                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                                    }}
+                                >
+                                    <Toolbar>
+                                        <Header tabValue={tabValue} handleTabChange={handleTabChange} />
+                                    </Toolbar>
+                                </AppBar>
 
-                            {/* drawer */}
-                            <Sidebar menuItems={userRole === 'ROLE_STUDENT' ? menuItemsStudent : menuItemsTeacher} />
+                                {/* drawer */}
+                                <Sidebar menuItems={userRole === 'ROLE_STUDENT' ? menuItemsStudent : menuItemsTeacher} />
 
-                            {/* main content */}
-                            <Main theme={theme} open={leftDrawerOpened}>
-                                <Outlet />
-                            </Main>
-                        </TabContext>
-                    </Box>
+                                {/* main content */}
+                                <Main theme={theme} open={leftDrawerOpened}>
+                                    <Outlet />
+                                </Main>
+                            </TabContext>
+                        </Box>
+                    </QuestionProvider>
                 </TaskProvider>
             </LessonProvider>
         </ClassProvider>

@@ -67,23 +67,7 @@ const Header = (props) => {
             </Box>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ flexGrow: 1 }} />
-            {/* create & profile */}
-            <IconButton
-                size="large"
-                sx={{
-                    backgroundColor: theme.palette.secondary.light,
-                    color: theme.palette.secondary.dark,
-                    '&:hover': {
-                        background: theme.palette.secondary.dark,
-                        color: theme.palette.secondary.light
-                    },
-                    marginRight: 1
-                }}
-                aria-label="createclass"
-                onClick={() => setOpenCreate(true)}
-            >
-                <IconPlus />
-            </IconButton>
+
             <Dialog
                 open={openCreate}
                 onClose={() => {

@@ -9,6 +9,7 @@ import SolutionLayout from 'views/solutions/SolutionLayout';
 import RevisionLayout from 'views/revisions/RevisionLayout';
 import QuestionLayout from 'views/question/QuestionLayout';
 import RankingLayout from 'views/ranking/RankingLayout';
+import InformationLayout from 'views/information/InformationLayout';
 
 //panel
 const ClassListPanel = Loadable(lazy(() => import('views/classList/ClassListPanel')));
@@ -18,6 +19,7 @@ const SolutionPanel = Loadable(lazy(() => import('views/solutions/SolutionPanel'
 const RevisionPanel = Loadable(lazy(() => import('views/revisions/RevisionPanel')));
 const QuestionPanel = Loadable(lazy(() => import('views/question/QuestionPanel')));
 const RankingPanel = Loadable(lazy(() => import('views/ranking/RankingPanel')));
+const InformationPanel = Loadable(lazy(() => import('views/information/InformationPanel')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -75,12 +77,12 @@ const MainRoutes = {
             ]
         },
         {
-            path: 'classes/class/task/question',
-            element: <QuestionLayout />,
+            path: 'info/',
+            element: <InformationLayout />,
             children: [
                 {
                     path: '',
-                    element: <QuestionPanel />
+                    element: <InformationPanel />
                 }
             ]
         },
@@ -91,6 +93,16 @@ const MainRoutes = {
                 {
                     path: '',
                     element: <SolutionPanel />
+                }
+            ]
+        },
+        {
+            path: 'classes/class/ranking',
+            element: <RankingLayout />,
+            children: [
+                {
+                    path: '',
+                    element: <RankingPanel />
                 }
             ]
         },

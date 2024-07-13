@@ -26,6 +26,8 @@ const BreadcrumbsComponent = (props) => {
                 return { name: props.classObj.name, obj: { classObj: props.classObj } };
             case 'requests':
                 return { name: 'Requests', obj: { classObj: props.classObj } };
+            case 'ranking':
+                return { name: 'Ranking', obj: { classObj: props.classObj } };
             case 'task':
                 return { name: state.taskObj.task.title, obj: { taskObj: state.taskObj, classObj: state.classObj } };
             case 'question':

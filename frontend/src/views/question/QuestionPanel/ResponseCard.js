@@ -82,7 +82,7 @@ const ExpandMore = styled((props) => {
     })
 }));
 
-const ResponseCard = ({ responseObj, questionObj, isOwn, isCorrect, isResponded, setCorrect }) => {
+const ResponseCard = ({ responseObj, questionObj, isOwn, isCorrect, isResponded, setCorrect, getResponses }) => {
     const [expanded, setExpanded] = useState(false);
     const [openCorrect, setOpenCorrect] = useState(false);
 
@@ -98,6 +98,7 @@ const ResponseCard = ({ responseObj, questionObj, isOwn, isCorrect, isResponded,
         try {
             const response = await responseService.setCorrect(responseObj.response.id);
             setCorrect(true);
+            getResponses();
         } catch (error) {
             console.log(error);
         }

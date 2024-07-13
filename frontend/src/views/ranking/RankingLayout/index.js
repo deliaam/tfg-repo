@@ -75,6 +75,10 @@ const ClassLayout = () => {
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
+    const menuItemsTeacher = [classes, requests, ranking, help];
+    const menuItemsStudent = [classes, ranking, help];
+
+    const userRole = useSelector((state) => state.auth.user.roles[0]);
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -96,7 +100,7 @@ const ClassLayout = () => {
                 </AppBar>
 
                 {/* drawer */}
-                <Sidebar menuItems={[classes, requests, ranking, help]} />
+                <Sidebar menuItems={userRole === 'ROLE_STUDENT' ? menuItemsStudent : menuItemsTeacher} />
 
                 {/* main content */}
                 <Main theme={theme} open={leftDrawerOpened}>

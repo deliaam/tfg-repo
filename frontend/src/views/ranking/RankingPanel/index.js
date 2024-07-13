@@ -21,9 +21,11 @@ import {
     Checkbox,
     FormGroup,
     FormControlLabel,
-    Collapse
+    Collapse,
+    Avatar
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
@@ -54,122 +56,65 @@ import CorrectionCard from './CorrectionCard';
 import solutionService from 'services/solution.service';
 import revisionService from 'services/revision.service';
 
-const revisionRequests = [
+const students = [
     {
         id: 1,
-        student: 'Delia Andreea Marin',
-        date: '7/05/24 21:55',
-        task: 'Tarea 1',
-        reviewed: true,
-        solutionObj: {
-            solution: {
-                id: 23,
-                description: '<p>Solución</p>',
-                dateTime: '2024-01-02T18:19:19',
-                qualification: 'POOR',
-                filesIds: ['']
-            },
-            numberOfCorrections: 5,
-            userName: 'Delia Andreea Marin',
-            files: [['b6479dc9-4383-4bb7-a693-c28b16954223', 'Casos de uso 1 .docx']],
-            corrected: true,
-            userId: 1
-        },
-        taskObj: {
-            task: {
-                id: 24,
-                title: 'Tarea 8',
-                description: '<p>dedasdasd</p>',
-                dateTime: '2024-05-10T13:30:00',
-                filesIds: ['']
-            },
-            lesson: 'Tema 10',
-            numberOfSolutions: 1,
-            numberOfCorrections: 0,
-            files: [['0963695d-be86-4f98-b973-6f6d9f6de6eb', '30546636.jpg']],
-            active: true,
-            resigned: false,
-            answered: true
-        },
-        correctionId: 37
+        name: 'Delia Andreea',
+        lastName: 'Marin',
+        score: 75
     },
     {
         id: 2,
-        student: 'Carlos Andreea Marin',
-        date: '7/05/24 21:55',
-        task: 'Tarea 1',
-        reviewed: true,
-        solutionObj: {
-            solution: {
-                id: 23,
-                description: '<p>Solución</p>',
-                dateTime: '2024-01-02T18:19:19',
-                qualification: 'POOR',
-                filesIds: ['']
-            },
-            numberOfCorrections: 5,
-            userName: 'Delia Andreea Marin',
-            files: [['b6479dc9-4383-4bb7-a693-c28b16954223', 'Casos de uso 1 .docx']],
-            corrected: true,
-            userId: 1
-        },
-        taskObj: {
-            task: {
-                id: 24,
-                title: 'Tarea 8',
-                description: '<p>dedasdasd</p>',
-                dateTime: '2024-05-10T13:30:00',
-                filesIds: ['']
-            },
-            lesson: 'Tema 10',
-            numberOfSolutions: 1,
-            numberOfCorrections: 0,
-            files: [['0963695d-be86-4f98-b973-6f6d9f6de6eb', '30546636.jpg']],
-            active: true,
-            resigned: false,
-            answered: true
-        },
-        correctionId: 36
+        name: 'Javier',
+        lastName: 'Benitez',
+        score: 55
     },
     {
         id: 3,
-        student: 'Pablo Andreea Marin',
-        date: '7/05/24 21:55',
-        task: 'Tarea 1',
-        reviewed: true,
-        solutionObj: {
-            solution: {
-                id: 23,
-                description: '<p>Solución</p>',
-                dateTime: '2024-01-02T18:19:19',
-                qualification: 'POOR',
-                filesIds: ['']
-            },
-            numberOfCorrections: 5,
-            userName: 'Delia Andreea Marin',
-            files: [['b6479dc9-4383-4bb7-a693-c28b16954223', 'Casos de uso 1 .docx']],
-            corrected: true,
-            userId: 1
-        },
-        taskObj: {
-            task: {
-                id: 24,
-                title: 'Tarea 8',
-                description: '<p>dedasdasd</p>',
-                dateTime: '2024-05-10T13:30:00',
-                filesIds: ['']
-            },
-            lesson: 'Tema 10',
-            numberOfSolutions: 1,
-            numberOfCorrections: 0,
-            files: [['0963695d-be86-4f98-b973-6f6d9f6de6eb', '30546636.jpg']],
-            active: true,
-            resigned: false,
-            answered: true
-        },
-        correctionId: 35
+        name: 'Oscar',
+        lastName: 'Gonzalo',
+        score: 40
+    },
+    {
+        id: 4,
+        name: 'Miguel',
+        lastName: 'Hernández',
+        score: 20
+    },
+    {
+        id: 5,
+        name: 'Carla',
+        lastName: 'Fernández',
+        score: 0
+    },
+    {
+        id: 6,
+        name: 'Marcos',
+        lastName: 'Sánchez Giménez',
+        score: 0
     }
 ];
+
+function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+
+    return color;
+}
+
 const RevisionPanel = (props) => {
     const theme = useTheme();
     console.log(props.classObj);
@@ -209,8 +154,15 @@ const RevisionPanel = (props) => {
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {revisions &&
-                                        revisions.map((revisionObj, index) => (
+                                    <Box display="flex" alignItems="center" justifyContent="center" marginBottom={2}>
+                                        <EmojiEventsIcon
+                                            sx={{ alignContent: 'center', alignSelf: 'center' }}
+                                            fontSize="large"
+                                            style={{ color: 'yellow' }}
+                                        ></EmojiEventsIcon>
+                                    </Box>
+                                    {students &&
+                                        students.map((studentObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card
                                                     sx={{
@@ -221,41 +173,45 @@ const RevisionPanel = (props) => {
                                                         },
                                                         backgroundColor: theme.palette.primary.light,
                                                         width: '100%',
-                                                        margin: 2
+                                                        marginBottom: 0.5,
+                                                        marginLeft: 2,
+                                                        marginRight: 2
                                                     }}
                                                 >
-                                                    <CardActionArea sx={{ p: 2 }} onClick={() => onRevisionRequestClick(revisionObj)}>
+                                                    <CardContent>
                                                         <Grid container spacing={3} direction="row" alignItems="center">
                                                             <Grid item>
-                                                                <Grid
-                                                                    container
-                                                                    direction="column"
-                                                                    alignItems="left"
-                                                                    justifyContent="space-between"
-                                                                    spacing={1}
-                                                                >
-                                                                    <Grid item>
-                                                                        <Typography variant="h3">{revisionObj.userName}</Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Typography variant="body1">
-                                                                            Solicitud:
-                                                                            {dayjs(revisionObj.revision.dateTime).format(
-                                                                                'ddd, DD MMM YYYY HH:mm:ss'
-                                                                            )}
-                                                                        </Typography>
-                                                                    </Grid>
-                                                                    <Grid item>
-                                                                        <Typography variant="h5">Tarea: {revisionObj.taskTitle}</Typography>
-                                                                    </Grid>
+                                                                <Grid item>
+                                                                    <Typography variant="h1">{index + 1}</Typography>
                                                                 </Grid>
                                                             </Grid>
-                                                            <Box sx={{ flexGrow: 1 }} />
                                                             <Grid item>
-                                                                <ArrowCircleRightIcon fontSize="large" />
+                                                                <Avatar
+                                                                    sx={{
+                                                                        margin: '8px 0 8px 8px !important',
+                                                                        bgcolor: stringToColor(studentObj.name + ' ' + studentObj.lastName)
+                                                                    }}
+                                                                    style={{ color: 'white' }}
+                                                                    aria-controls={open ? 'menu-list-grow' : undefined}
+                                                                    aria-haspopup="true"
+                                                                    children={`${studentObj.name.split(' ')[0][0]}${
+                                                                        studentObj.lastName.split(' ')[0][0]
+                                                                    }`}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Typography variant="h3">
+                                                                    {studentObj.name + ' ' + studentObj.lastName}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Box sx={{ flexGrow: 1 }} />
+                                                            <Grid item sx={{ marginTop: 1 }}>
+                                                                <Grid item>
+                                                                    <Typography variant="h1">{studentObj.score}</Typography>
+                                                                </Grid>
                                                             </Grid>
                                                         </Grid>
-                                                    </CardActionArea>
+                                                    </CardContent>
                                                 </Card>
                                             </Box>
                                         ))}

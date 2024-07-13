@@ -30,7 +30,9 @@ import { LessonContext } from 'contexts/lesson/LessonContext';
 import './rte-editor.css';
 import FileComponent from 'ui-components/FileComponent';
 import taskService from 'services/task.service';
-
+import { TaskContext } from 'contexts/task/TaskContext';
+import { ClassContext } from 'contexts/class/ClassContext';
+import { useSelector } from 'react-redux';
 // date time picker
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -48,17 +50,20 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('Descripción');
     const { lessonsList, setLessonsList } = useContext(LessonContext);
+    const { tasksList, setTasksList } = useContext(TaskContext);
     dayjs.locale('es');
-    const [date, setDate] = useState(dayjs('2023-05-04T15:30'));
+    const [date, setDate] = useState(dayjs(new Date()));
     const [files, setFiles] = useState([]);
     const auxFiles = [...files];
+    const { classObj } = useContext(ClassContext) || { classObj: undefined };
+    const userId = useSelector((state) => state.auth.user.id);
 
     const [lesson, setLesson] = useState(0);
     const handleLessonChange = (event) => {
         setLesson(event.target.value);
     };
-    const create = () => {
-        taskService.create(title, description, files, date.toISOString(), lessonsList[lesson].id);
+    const create = async () => {
+        await taskService.create(title, description, files, date.toISOString(), lessonsList[lesson].id);
     };
 
     const selectFile = (event) => {
@@ -74,8 +79,15 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
         setFiles(auxFiles);
     };
     useEffect(() => {}, [files]);
-    const handleCreateTask = () => {
-        create();
+    const handleCreateTask = async () => {
+        await create();
+        try {
+            const response = await taskService.getTasks(classObj.id, userId);
+            setTasksList(response);
+        } catch (error) {
+            console.log(error);
+            setTasksList([]);
+        }
         setOpenCreate(false);
     };
     return (
@@ -102,7 +114,7 @@ const TaskDialog = ({ openCreate, setOpenCreate }) => {
                     <Typography sx={{ ml: 2, flex: 1 }} variant="h3" component="div" color="white">
                         Tarea
                     </Typography>
-                    <Button color="inherit" onClick={handleCreateTask} size="large">
+                    <Button color="inherit" onClick={handleCreateTask} size="large" disabled={title === ''}>
                         Crear tarea
                     </Button>
                 </Toolbar>

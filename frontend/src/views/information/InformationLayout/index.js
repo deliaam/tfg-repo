@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -10,16 +9,10 @@ import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material'
 import Header from './Header';
 import Sidebar from 'layout/Sidebar';
 import { drawerWidth } from 'themes/constant';
-import LessonProvider from 'contexts/lesson/LessonProvider';
-
-// assets
-import { TabContext } from '@mui/lab';
 
 // menu items
 import classes from 'menu-items/classes';
 import help from 'menu-items/help';
-import requests from 'menu-items/requests';
-import ranking from 'menu-items/ranking';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -67,47 +60,38 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
-const ClassLayout = () => {
-    const [tabValue, setTabValue] = useState('1');
+const InformationLayout = () => {
     const theme = useTheme();
-    // Handle left drawer
     const leftDrawerOpened = useSelector((state) => state.menu.opened);
-    const handleTabChange = (event, newValue) => {
-        setTabValue(newValue);
-    };
-    const menuItemsTeacher = [classes, requests, ranking, help];
-    const menuItemsStudent = [classes, ranking, help];
 
-    const userRole = useSelector((state) => state.auth.user.roles[0]);
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             {/* header */}
-            <TabContext value={tabValue}>
-                <AppBar
-                    enableColorOnDark
-                    position="fixed"
-                    color="inherit"
-                    elevation={0}
-                    sx={{
-                        bgcolor: theme.palette.background.default,
-                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                    }}
-                >
-                    <Toolbar>
-                        <Header tabValue={tabValue} handleTabChange={handleTabChange} />
-                    </Toolbar>
-                </AppBar>
+            <AppBar
+                enableColorOnDark
+                position="fixed"
+                color="inherit"
+                elevation={0}
+                sx={{
+                    bgcolor: theme.palette.background.default,
+                    transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                }}
+            >
+                <Toolbar>
+                    <Header />
+                </Toolbar>
+            </AppBar>
 
-                {/* drawer */}
-                <Sidebar menuItems={userRole === 'ROLE_STUDENT' ? menuItemsStudent : menuItemsTeacher} />
-                {/* main content */}
-                <Main theme={theme} open={leftDrawerOpened}>
-                    <Outlet />
-                </Main>
-            </TabContext>
+            {/* drawer */}
+            <Sidebar menuItems={[classes, help]} />
+
+            {/* main content */}
+            <Main theme={theme} open={leftDrawerOpened}>
+                <Outlet />
+            </Main>
         </Box>
     );
 };
 
-export default ClassLayout;
+export default InformationLayout;

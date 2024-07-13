@@ -10,7 +10,7 @@ const classes = {
             id: 'ranking',
             title: 'Ranking',
             type: 'item',
-            url: '/home/ranking/',
+            url: '/home/classes/class/ranking',
             icon: LeaderboardIcon,
             breadcrumbs: false
         }

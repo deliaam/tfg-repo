@@ -51,6 +51,7 @@ const TasksPanel = (props) => {
         closed: true
     });
     const { tasksList, setTasksList } = useContext(TaskContext);
+    const [filteredTaskList, setFilteredTaskList] = useState(tasksList);
     const { pending, handled, closed } = state;
     const {
         state: { classObj }
@@ -67,15 +68,43 @@ const TasksPanel = (props) => {
             [event.target.name]: event.target.checked
         });
     };
+    useEffect(() => {
+        let filteredByState = tasksList;
+        if (!state.pending) {
+            filteredByState = filteredByState.filter((taskObj) => !taskObj.active || taskObj.answered);
+        }
+        if (!state.handled) {
+            filteredByState = filteredByState.filter((taskObj) => !taskObj.active || !taskObj.answered);
+        }
+        if (!state.closed) {
+            filteredByState = filteredByState.filter((taskObj) => taskObj.active);
+        }
+        if (order === 'older') filteredByState = filteredByState.reverse();
+        if (lesson != -1) filteredByState = filteredByState.filter((taskObj) => taskObj.lesson === lessonsList[lesson].name);
+        setFilteredTaskList(filteredByState);
+    }, [state]);
     const handleOrderChange = (event) => {
         setOrder(event.target.value);
+        setFilteredTaskList(filteredTaskList.reverse());
     };
     const handleLessonChange = (event) => {
         setLesson(event.target.value);
+        if (event.target.value === -1) {
+            if (order === 'recents') {
+                setFilteredTaskList(tasksList);
+            } else {
+                setFilteredTaskList(tasksList.reverse());
+            }
+        } else {
+            setFilteredTaskList(tasksList.filter((taskObj) => taskObj.lesson === lessonsList[event.target.value].name));
+        }
     };
     const onTaskClick = (taskObj) => {
         navigate(`/home/classes/class/task`, { state: { taskObj: taskObj, classObj: classObj } });
     };
+    useEffect(() => {
+        setFilteredTaskList(tasksList);
+    }, [tasksList]);
 
     return (
         <>
@@ -88,8 +117,8 @@ const TasksPanel = (props) => {
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {tasksList &&
-                                        tasksList.map((taskObj, index) => (
+                                    {filteredTaskList &&
+                                        filteredTaskList.map((taskObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card
                                                     sx={{
@@ -250,10 +279,14 @@ const TasksPanel = (props) => {
                                                         control={<Checkbox checked={pending} onChange={handleStateChange} name="pending" />}
                                                         label="Pendientes"
                                                     />
-                                                    <FormControlLabel
-                                                        control={<Checkbox checked={handled} onChange={handleStateChange} name="handled" />}
-                                                        label="Entregadas"
-                                                    />
+                                                    {!isTeacher && (
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox checked={handled} onChange={handleStateChange} name="handled" />
+                                                            }
+                                                            label="Entregadas"
+                                                        />
+                                                    )}
                                                     <FormControlLabel
                                                         control={<Checkbox checked={closed} onChange={handleStateChange} name="closed" />}
                                                         label="Cerradas"

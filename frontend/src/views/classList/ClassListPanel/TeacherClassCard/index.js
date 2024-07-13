@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 
 const TeacherClassCard = (props) => {
     const classObj = props.classObj;
-    const handleDeleteClass = props.handleDeleteCLass;
+    const handleDeleteClass = props.handleDeleteClass;
     const sx = props.sx;
     const theme = useTheme();
     const [name, setName] = useState(classObj.name);

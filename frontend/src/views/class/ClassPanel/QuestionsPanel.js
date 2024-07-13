@@ -39,6 +39,7 @@ import { connect, useSelector } from 'react-redux';
 import BreadcrumbsComponent from 'ui-components/BreadcrumbsComponent';
 import { ClassContext } from 'contexts/class/ClassContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { QuestionContext } from 'contexts/question/QuestionContext';
 
 const QuestionsPanel = (props) => {
     const [order, setOrder] = useState('recents');
@@ -60,16 +61,7 @@ const QuestionsPanel = (props) => {
     const isTeacher = props.user.roles.includes('ROLE_TEACHER');
     dayjs.locale('es');
 
-    const getQuestions = async () => {
-        try {
-            const response = await questionService.getQuestions(classObj.id, taskObj ? taskObj.task.id : null);
-            setQuestions(response);
-            console.log(taskObj);
-        } catch (error) {
-            console.log(error);
-            return {};
-        }
-    };
+    const { questionsList, setQuestionsList } = useContext(QuestionContext);
     const handleStateChange = (event) => {
         setState({
             ...state,
@@ -89,10 +81,7 @@ const QuestionsPanel = (props) => {
             navigate(`/home/classes/class/question`, { state: { questionObj: questionObj, classObj: classObj } });
         }
     };
-
-    useEffect(() => {
-        getQuestions();
-    }, []);
+    console.log(questionsList);
     return (
         <>
             <Grid container direction="column" spacing={3}>
@@ -104,8 +93,8 @@ const QuestionsPanel = (props) => {
                         <Grid item xs>
                             <Card>
                                 <CardContent>
-                                    {questions &&
-                                        questions.map((questionObj, index) => (
+                                    {questionsList &&
+                                        questionsList.map((questionObj, index) => (
                                             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', alignContent: 'flex-start' }}>
                                                 <Card
                                                     sx={{
@@ -255,11 +244,7 @@ const QuestionsPanel = (props) => {
                                                     />
                                                     <FormControlLabel
                                                         control={<Checkbox checked={handled} onChange={handleStateChange} name="handled" />}
-                                                        label="Entregadas"
-                                                    />
-                                                    <FormControlLabel
-                                                        control={<Checkbox checked={closed} onChange={handleStateChange} name="closed" />}
-                                                        label="Cerradas"
+                                                        label="Resueltas"
                                                     />
                                                 </FormGroup>
                                             </FormControl>

@@ -24,6 +24,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import 'react-quill/dist/quill.snow.css';
 
 import { useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // project imports
 import MainCard from 'ui-components/MainCard';
@@ -42,6 +43,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import es from 'dayjs/locale/es';
 import { esES } from '@mui/x-date-pickers/locales';
+import { QuestionContext } from 'contexts/question/QuestionContext';
 const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -51,12 +53,15 @@ const QuestionDialog = ({ openCreate, setOpenCreate }) => {
     const [description, setDescription] = useState('Descripción');
     const { lessonsList, setLessonsList } = useContext(LessonContext);
     const { tasksList, setTasksList } = useContext(TaskContext);
+    const { questionsList, setQuestionsList } = useContext(QuestionContext);
     console.log(lessonsList);
     console.log(tasksList);
     const [files, setFiles] = useState([]);
     const auxFiles = [...files];
     const userId = useSelector((state) => state.auth.user.id);
-
+    const {
+        state: { classObj }
+    } = useLocation();
     const [lesson, setLesson] = useState(-1);
     const [task, setTask] = useState(-1);
     const handleLessonChange = (event) => {
@@ -67,8 +72,8 @@ const QuestionDialog = ({ openCreate, setOpenCreate }) => {
         setTask(event.target.value);
         setLesson(-1);
     };
-    const create = () => {
-        questionService.create(
+    const create = async () => {
+        await questionService.create(
             title,
             description,
             files,
@@ -91,8 +96,15 @@ const QuestionDialog = ({ openCreate, setOpenCreate }) => {
         setFiles(auxFiles);
     };
     useEffect(() => {}, [files]);
-    const handleCreateQuestion = () => {
-        create();
+    const handleCreateQuestion = async () => {
+        await create();
+        try {
+            const response = await questionService.getQuestions(classObj.id, null);
+            setQuestionsList(response);
+        } catch (error) {
+            console.log(error);
+            setQuestionsList([]);
+        }
         setOpenCreate(false);
     };
     return (
